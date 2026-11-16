@@ -3,6 +3,8 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, viewport-fit=cover">
+<meta name="robots" content="noindex, nofollow">
+<meta name="googlebot" content="noindex, nofollow">
 <meta name="theme-color" content="#FFF8E7">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-title" content="우리 가족 기록장">
@@ -353,6 +355,14 @@ select.field{padding:10px 8px;height:44px;background:#fff}
 .toast{position:fixed;left:50%;bottom:92px;transform:translateX(-50%) translateY(10px);background:rgba(90,70,54,.95);color:#fff;padding:10px 16px;border-radius:999px;font-size:13px;font-weight:700;opacity:0;pointer-events:none;transition:opacity .22s, transform .22s;z-index:90;max-width:86%;text-align:center;box-shadow:0 8px 20px rgba(90,70,54,.25)}
 .toast.on{opacity:1;transform:translateX(-50%) translateY(0)}
 
+/* ---------- 실시간 연동 상태 ---------- */
+.sync-chip{display:inline-flex;align-items:center;gap:3px;background:#fff;border-radius:999px;padding:7px 10px;font-size:10.5px;font-weight:800;color:#4E9A6B;box-shadow:var(--shadow-sm);white-space:nowrap;cursor:default;transition:background .2s}
+.sync-chip.wait{color:#B48B3C}
+.sync-chip.off{color:#B0766A}
+.sync-chip.flash{animation:syncflash .5s ease 2}
+@keyframes syncflash{0%{transform:scale(1);background:#fff}50%{transform:scale(1.09);background:#E8F8EE}100%{transform:scale(1);background:#fff}}
+@media (max-width:360px){.sync-chip{padding:6px 7px;font-size:9.5px}}
+
 @keyframes fade{from{opacity:0}to{opacity:1}}
 @keyframes up{from{transform:translateY(24px);opacity:.6}to{transform:translateY(0);opacity:1}}
 @media (prefers-reduced-motion: reduce){*{animation:none!important;transition:none!important}}
@@ -364,6 +374,7 @@ select.field{padding:10px 8px;height:44px;background:#fff}
     <div class="hd-row1">
       <div class="hd-title" id="hdTitle"></div>
       <div class="hd-btns">
+        <span class="sync-chip" id="syncChip" title="가족 기기와 실시간으로 연결하는 중이에요">🟡 연결 중</span>
         <button class="round-btn" data-act="settings-open" aria-label="설정">⚙️</button>
       </div>
     </div>
@@ -944,7 +955,7 @@ function readStore(){
 var state = normalize(readStore());
 
 var saveWarned = false;
-function save(){
+function saveLocal(){
   try {
     localStorage.setItem(STORE_KEY, JSON.stringify(state));
   } catch (e){
@@ -953,6 +964,10 @@ function save(){
       toast('저장 공간이 부족해요. ⚙️ 설정에서 백업한 뒤 초기화해 주세요.');
     }
   }
+}
+function save(){
+  saveLocal();
+  queuePush();
 }
 
 /* ---------------------------- 계산 ---------------------------- */
@@ -1274,6 +1289,7 @@ function afterRender(){
     var list = document.getElementById('chatList');
     if (list) list.scrollTop = list.scrollHeight;
   }
+  paintSyncChip();
 }
 
 function kidSwitchHTML(){
@@ -1382,7 +1398,7 @@ function renderHome(){
       '<div class="card-desc" style="margin:0 0 10px">태주·주원·엄마·아빠가 각자 할 일을 체크해요</div>' +
       ALL.map(function(id){ return todoPersonHTML(person(id)); }).join('') +
     '</div>' +
-    '<div class="foot-note">기록은 이 기기 브라우저에 자동으로 저장돼요 · ⚙️ 에서 백업할 수 있어요</div>';
+    '<div class="foot-note">기록은 가족 모두에게 실시간으로 함께 보여요 · 이 기기에도 자동 저장돼요 · ⚙️ 에서 백업할 수 있어요</div>';
 }
 
 var TODO_THEME = {
@@ -1814,7 +1830,7 @@ function renderMeals(){
       '<div class="card-desc">최근 일주일 동안 적어 둔 메뉴예요</div>' +
       (pastDays.length ? pastDays.join('') : '<div class="empty">아직 지난 기록이 없어요</div>') +
     '</div>' +
-    '<div class="foot-note">오늘 메뉴는 이 기기에 저장돼요</div>';
+    '<div class="foot-note">오늘 메뉴는 온 가족이 함께 봐요</div>';
 }
 
 /* ============================ 일정 ============================ */
@@ -1955,7 +1971,7 @@ function renderPraise(){
       '<div class="money-chips" style="margin:0 0 10px">' + summary + '</div>' +
       list +
     '</div>' +
-    '<div class="foot-note">칭찬은 이 기기에 저장돼요</div>';
+    '<div class="foot-note">칭찬은 다른 기기에도 바로 나타나요</div>';
 }
 
 /* ============================ 용돈 ============================ */
@@ -2084,8 +2100,8 @@ function renderChat(){
   return '' +
     '<div class="card card--pink">' +
       '<div class="card-title">💬 우리 가족 채팅</div>' +
-      '<div class="card-desc">말풍선과 귀여운 스티커로 이야기해요</div>' +
-      '<div class="chat-note">이 기록장은 이 기기 브라우저(localStorage)에만 저장돼요. 그래서 다른 기기에는 실시간으로 나타나지 않고, 기기마다 따로 쌓여요.</div>' +
+      '<div class="card-desc">가족이 말풍선과 스티커로 이야기해요 · 다른 기기에 바로 나타나요</div>' +
+      '<div class="chat-note" id="chatSyncNote">🟡 연결 중 · 곧 가족 기기와 맞춰져요</div>' +
       '<div class="sender-row">' + senders + '</div>' +
       '<div class="lock-row">' +
         '<div class="tiny">' + (s.locked ? '🔒 ' + esc(p.name) + ' 이름으로 잠겨 있어요' : '누구 이름으로 보낼지 골라 주세요') + '</div>' +
@@ -2122,6 +2138,10 @@ function openSettings(){
   openModal(
     '<div class="sheet-hd"><div class="sheet-title">⚙️ 설정</div>' +
     '<button class="sheet-close" data-act="modal-close" aria-label="닫기">✕</button></div>' +
+    '<div class="settings-row">' +
+      '<div><div class="lbl">실시간 연동</div><div class="sub" id="settingsSyncSub">' + fbSettingsLine() + '</div></div>' +
+      '<button class="btn btn--sm btn--ghost" data-act="sync-retry">다시 연결</button>' +
+    '</div>' +
     '<div class="settings-row">' +
       '<div><div class="lbl">JSON 백업 내보내기</div><div class="sub">지금까지의 기록을 파일로 저장해요</div></div>' +
       '<button class="btn btn--sm btn--mint" data-act="export-json">내보내기</button>' +
@@ -2185,7 +2205,7 @@ function handleImportFile(file){
     var summary = '가족 ' + ALL.length + '명 · 공부 ' +
       ((next.study.taeju || []).length + (next.study.juwon || []).length) + '개 · 채팅 ' +
       next.chat.messages.length + '개';
-    confirmModal('백업을 불러올까요?', '이 기기에 있는 기록이 백업 파일 내용으로 바뀌어요.<br><span class="tiny">' + summary + '</span>', '불러오기', function(){
+    confirmModal('백업을 불러올까요?', '지금 기록이 백업 파일 내용으로 바뀌고, <b>가족 모두의 화면에도 함께 반영돼요</b>.<br><span class="tiny">' + summary + '</span>', '불러오기', function(){
       state = next;
       save();
       render();
@@ -2487,18 +2507,18 @@ function sendChat(){
   var el = document.getElementById('chatInput');
   var text = el ? el.value.trim() : '';
   if (!text){ toast('메시지를 적어 주세요'); return false; }
-  state.chat.messages.push({
-    id: uid(), sender: state.chat.sender, kind: 'text', text: text.slice(0, 500), at: Date.now(), heart: false
-  });
+  var msg = { id: uid(), sender: state.chat.sender, kind: 'text', text: text.slice(0, 500), at: Date.now(), heart: false };
+  markPendingMsg(msg.id);
+  state.chat.messages.push(msg);
   save(); render();
   focusById('chatInput');
   return true;
 }
 
 function sendSticker(id){
-  state.chat.messages.push({
-    id: uid(), sender: state.chat.sender, kind: 'sticker', text: '', sticker: stickerById(id).id, at: Date.now(), heart: false
-  });
+  var msg = { id: uid(), sender: state.chat.sender, kind: 'sticker', text: '', sticker: stickerById(id).id, at: Date.now(), heart: false };
+  markPendingMsg(msg.id);
+  state.chat.messages.push(msg);
   save(); closeModal(); render();
   toast('스티커를 보냈어요');
 }
@@ -2525,6 +2545,7 @@ function toggleChatHeart(id){
 }
 
 function deleteChat(id){
+  forgetPendingMsg(id);
   state.chat.messages = state.chat.messages.filter(function(m){ return m.id !== id; });
   save(); render();
   toast('메시지를 지웠어요');
@@ -2614,6 +2635,7 @@ var ACTIONS = {
   'export-json': exportJSON,
   'import-json': importJSON,
   'reset-data': resetAll,
+  'sync-retry': function(){ fbReconnect(); },
   'modal-close': closeModal,
   'confirm-ok': function(){} /* confirmModal이 직접 연결 */
 };
@@ -2663,11 +2685,321 @@ document.addEventListener('keydown', function(e){
   if (ent === 'chat-send'){ if (sendChat()) render(); return; }
 });
 
+/* ============================ 실시간 연동 (Firebase Realtime Database) ============================ */
+var ROOM_PATH = 'rooms/kgh-yena-tj-jw-family-2026/state';
+var FB_SDK = [
+  'https://www.gstatic.com/firebasejs/10.14.1/firebase-app-compat.js',
+  'https://www.gstatic.com/firebasejs/10.14.1/firebase-database-compat.js'
+];
+var FB_CONFIG = {
+  apiKey: 'AIzaSyAFwaymq3tN5uvaVDyWSXHsX2AoMh15erY',
+  authDomain: 'family-log-56c73.firebaseapp.com',
+  databaseURL: 'https://family-log-56c73-default-rtdb.firebaseio.com',
+  projectId: 'family-log-56c73',
+  storageBucket: 'family-log-56c73.firebasestorage.app',
+  messagingSenderId: '432591790583',
+  appId: '1:432591790583:web:6f3f532628cb4e86c54ef2'
+};
+
+/* 가족이 함께 보는 값들만 올려요.
+   기기별 설정(state.chat.sender, state.chat.locked, state.ui)은 여기에 없어서
+   엄마 폰에서 '엄마'로 잠가도 아빠 폰 발신자는 그대로예요. */
+var SHARED_KEYS = ['family','study','done','stamps','todos','mission','meals','events','health','praise','allowance'];
+var DEVICE_ID = 'd' + Math.random().toString(36).slice(2, 8) + Date.now().toString(36).slice(-3);
+
+var fb = {
+  status: 'connecting', ready: false, loading: false, db: null, ref: null,
+  timer: null, lastHash: null, lastSyncAt: null, everConnected: false, seeding: false,
+  pendingMsgs: {}, error: '', writeWarned: false, flashing: false, flashTimer: null
+};
+var fbRetryTimer = null;
+
+function fbShared(){
+  var out = {};
+  SHARED_KEYS.forEach(function(k){ out[k] = state[k]; });
+  out.chat = { messages: state.chat.messages };
+  return out;
+}
+function fbHash(){
+  try { return JSON.stringify(fbShared()); } catch (e){ return null; }
+}
+function markPendingMsg(id){
+  if (id) fb.pendingMsgs[id] = Date.now();
+}
+function forgetPendingMsg(id){
+  if (id && fb.pendingMsgs[id]) delete fb.pendingMsgs[id];
+}
+
+function fbSetStatus(s, err){
+  fb.status = s;
+  if (err) fb.error = String((err && err.message) || err).slice(0, 120);
+  else if (s === 'online') fb.error = '';
+  paintSyncChip();
+}
+
+function fbSettingsLine(){
+  if (fb.status === 'online') return '🟢 켜짐 · 가족 기기와 바로 맞춰져요' + (fb.lastSyncAt ? ' (마지막 ' + timeKo(fb.lastSyncAt) + ')' : '');
+  if (fb.status === 'offline') return '🔴 연결이 끊겨 이 기기 기록으로만 동작해요' + (fb.error ? ' · ' + esc(fb.error) : '');
+  return '🟡 연결하는 중이에요';
+}
+
+function paintSyncChip(){
+  var el = document.getElementById('syncChip');
+  if (el){
+    var txt = '🟡 연결 중', cls = ' wait', tip = '가족 기기와 연결하는 중이에요';
+    if (fb.status === 'online'){
+      txt = '🟢 실시간 연동';
+      cls = '';
+      tip = '가족 기기와 실시간으로 연결돼 있어요' + (fb.lastSyncAt ? ' · 마지막 동기화 ' + timeKo(fb.lastSyncAt) : '');
+    } else if (fb.status === 'offline'){
+      txt = '🔴 오프라인';
+      cls = ' off';
+      tip = '연결이 끊겨 이 기기 기록으로만 동작해요. 연결되면 자동으로 다시 맞춰요.' + (fb.error ? ' (' + fb.error + ')' : '');
+    }
+    el.textContent = txt;
+    el.className = 'sync-chip' + cls + (fb.flashing ? ' flash' : '');
+    el.title = tip;
+  }
+  var note = document.getElementById('chatSyncNote');
+  if (note){
+    note.textContent = fb.status === 'online'
+      ? '🟢 실시간 연동 중 · 이 대화는 가족 모든 기기에 바로 나타나요'
+      : (fb.status === 'offline'
+        ? '🔴 지금은 오프라인 · 연결되면 다른 기기에도 함께 나타나요'
+        : '🟡 연결 중 · 곧 가족 기기와 맞춰져요');
+  }
+  var sub = document.getElementById('settingsSyncSub');
+  if (sub) sub.textContent = fbSettingsLine();
+}
+
+function fbFlash(){
+  fb.flashing = true;
+  paintSyncChip();
+  clearTimeout(fb.flashTimer);
+  fb.flashTimer = setTimeout(function(){ fb.flashing = false; paintSyncChip(); }, 1700);
+}
+
+function fbLoadScript(src){
+  return new Promise(function(resolve, reject){
+    var s = document.createElement('script');
+    s.src = src;
+    s.async = true;
+    var settled = false;
+    s.onload = function(){ if (!settled){ settled = true; resolve(); } };
+    s.onerror = function(){ if (!settled){ settled = true; reject(new Error(src + ' 불러오기 실패')); } };
+    document.head.appendChild(s);
+    setTimeout(function(){ if (!settled){ settled = true; reject(new Error(src + ' 시간 초과')); } }, 15000);
+  });
+}
+
+function fbConnect(){
+  if (fb.ready || fb.loading) return;
+  fb.loading = true;
+  fbSetStatus('connecting');
+  fbLoadScript(FB_SDK[0])
+    .then(function(){ return fbLoadScript(FB_SDK[1]); })
+    .then(function(){ fbInit(); })
+    .then(null, function(err){
+      fb.loading = false;
+      fbSetStatus('offline', err);
+      fbScheduleRetry();
+    });
+}
+
+function fbInit(){
+  if (typeof firebase === 'undefined' || !firebase.initializeApp) throw new Error('Firebase SDK 없음');
+  var app;
+  try {
+    app = (firebase.apps && firebase.apps.length) ? firebase.app() : firebase.initializeApp(FB_CONFIG);
+  } catch (e){
+    app = firebase.app();
+  }
+  fb.db = firebase.database(app);
+  fb.ref = fb.db.ref(ROOM_PATH);
+  fb.ready = true;
+  fb.loading = false;
+  fb.lastHash = null;
+
+  fb.db.ref('.info/connected').on('value', function(snap){
+    var on = snap.val() === true;
+    if (on){ fb.everConnected = true; fbSetStatus('online'); }
+    else fbSetStatus(fb.everConnected ? 'offline' : 'connecting');
+  });
+
+  fb.ref.on('value', function(snap){ fbOnRemote(snap.val()); }, function(err){
+    fbSetStatus('offline', err);
+    fbScheduleRetry();
+  });
+  paintSyncChip();
+}
+
+function fbScheduleRetry(){
+  if (fbRetryTimer) return;
+  fbRetryTimer = setTimeout(function(){
+    fbRetryTimer = null;
+    if (!fb.ready){ fb.loading = false; fbConnect(); }
+  }, 20000);
+}
+
+function fbWriteWarn(){
+  if (fb.writeWarned) return;
+  fb.writeWarned = true;
+  toast('실시간 저장이 잠시 막혔어요. 이 기기에는 저장돼 있어요.');
+}
+
+function queuePush(){
+  if (!fb || !fb.ready || !fb.ref || fb.timer) return;
+  fb.timer = setTimeout(function(){ fb.timer = null; fbPush(false); }, 180);
+}
+
+function fbPush(force){
+  if (!fb.ready || !fb.ref) return;
+  var h = fbHash();
+  if (!force && h !== null && h === fb.lastHash) return;
+  var payload = fbShared();
+  payload.v = SCHEMA_VERSION;
+  payload.meta = { at: Date.now(), by: DEVICE_ID };
+  fb.lastHash = h;
+  try {
+    var p = fb.ref.set(payload);
+    if (p && typeof p.then === 'function'){
+      p.then(null, function(err){
+        fb.lastHash = null;
+        fbSetStatus('offline', err);
+        fbWriteWarn();
+        fbScheduleRetry();
+      });
+    }
+  } catch (e){
+    fb.lastHash = null;
+    fbSetStatus('offline', e);
+  }
+}
+
+/* 서버가 비어 있을 때: 두 기기가 동시에 열어도 한 번만 씨앗을 심도록 트랜잭션을 써요 */
+function fbSeed(){
+  if (fb.seeding || !fb.ready || !fb.ref) return;
+  fb.seeding = true;
+  var payload = fbShared();
+  payload.v = SCHEMA_VERSION;
+  payload.meta = { at: Date.now(), by: DEVICE_ID };
+  var release = function(){ setTimeout(function(){ fb.seeding = false; }, 1000); };
+  try {
+    fb.ref.transaction(function(cur){ return cur === null ? payload : undefined; }, function(err, committed, snap){
+      release();
+      if (err){ fbSetStatus('offline', err); return; }
+      if (committed){
+        fb.lastHash = fbHash();
+        fb.lastSyncAt = Date.now();
+        paintSyncChip();
+        return;
+      }
+      var v = snap && snap.val();
+      if (isObj(v)) fbOnRemote(v);
+      else fbPush(true);
+    });
+  } catch (e){
+    release();
+    fbPush(true);
+  }
+}
+
+function fbOnRemote(val){
+  if (!isObj(val)){ /* 서버가 비어 있어요 → 이 기기 기록을 올려 시작 */
+    fbSeed();
+    return;
+  }
+  if (val.meta && val.meta.by === DEVICE_ID) return; /* 방금 내가 올린 값 */
+  if (!isObj(val.family) || !isObj(val.study) || !isObj(val.chat)) return; /* 형식이 다르면 그대로 둠 */
+
+  var remoteMsgs = Array.isArray(val.chat.messages) ? val.chat.messages : [];
+  var cand = {};
+  SHARED_KEYS.forEach(function(k){ cand[k] = val[k]; });
+  cand.chat = { sender: state.chat.sender, locked: state.chat.locked, messages: remoteMsgs };
+  var next = normalize(cand);
+
+  /* 같은 순간에 두 기기가 보내 메시지가 유실되지 않도록, 내가 방금 보낸 메시지는 살려 둬요 */
+  var seen = {};
+  next.chat.messages.forEach(function(m){ seen[m.id] = 1; });
+  var now = Date.now(), rescued = false;
+  Object.keys(fb.pendingMsgs).forEach(function(id){
+    if (now - fb.pendingMsgs[id] > 20000){ delete fb.pendingMsgs[id]; return; }
+    if (seen[id]) return;
+    for (var i = 0; i < state.chat.messages.length; i++){
+      if (state.chat.messages[i].id === id){
+        next.chat.messages.push(state.chat.messages[i]);
+        seen[id] = 1;
+        rescued = true;
+        break;
+      }
+    }
+  });
+  if (rescued) next.chat.messages.sort(function(a, b){ return numOf(a.at, 0) - numOf(b.at, 0); });
+
+  var before = fbHash();
+  SHARED_KEYS.forEach(function(k){ state[k] = next[k]; });
+  state.chat.messages = next.chat.messages;
+  var after = fbHash();
+  fb.lastSyncAt = Date.now();
+
+  if (after !== before){
+    saveLocal();
+    softRender();
+    fbFlash();
+  }
+  fb.lastHash = after;
+  if (rescued){ fb.lastHash = null; queuePush(); }
+  paintSyncChip();
+}
+
+function fbReconnect(){
+  if (!fb.ready){ fb.loading = false; fbConnect(); return; }
+  fbSetStatus('connecting');
+  try { fb.db.goOnline(); } catch (e){}
+  if (fb.ref){
+    fb.ref.once('value', function(snap){ fbOnRemote(snap.val()); }, function(err){ fbSetStatus('offline', err); });
+  }
+  toast('다시 연결을 시도하고 있어요');
+}
+
+/* 다른 기기 기록이 들어와도 보고 있던 화면과 적던 글이 그대로 유지되도록 다시 그리기 */
+function inputKeyOf(el){
+  if (!el) return null;
+  if (el.id) return '#' + el.id;
+  var m = el.getAttribute && el.getAttribute('data-meal');
+  return m ? '[data-meal="' + m + '"]' : null;
+}
+function softRender(){
+  var ae = document.activeElement;
+  var keep = null;
+  if (ae && (ae.tagName === 'INPUT' || ae.tagName === 'TEXTAREA')){
+    var key = inputKeyOf(ae);
+    if (key) keep = { key: key, value: ae.value, start: ae.selectionStart, end: ae.selectionEnd };
+  }
+  var list = document.getElementById('chatList');
+  var atBottom = list ? (list.scrollHeight - list.scrollTop - list.clientHeight) < 48 : false;
+  render();
+  if (keep){
+    var el = document.querySelector(keep.key);
+    if (el && typeof el.value === 'string'){
+      el.value = keep.value;
+      try { el.focus(); el.setSelectionRange(keep.start, keep.end); } catch (e){}
+    }
+  }
+  if (atBottom){
+    var l2 = document.getElementById('chatList');
+    if (l2) l2.scrollTop = l2.scrollHeight;
+  }
+}
+
 /* ---------------------------- 시작 ---------------------------- */
 function init(){
   if (!readStore()) save();
   render();
   if (state.ui.tab === 'home') loadWeather();
+  paintSyncChip();
+  fbConnect();
+  window.addEventListener('online', function(){ if (!fb.ready) fbConnect(); else fbReconnect(); });
   var fileInput = document.getElementById('importFile');
   if (fileInput){
     fileInput.addEventListener('change', function(){
