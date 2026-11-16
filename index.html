@@ -2706,6 +2706,9 @@ var FB_CONFIG = {
    엄마 폰에서 '엄마'로 잠가도 아빠 폰 발신자는 그대로예요. */
 var SHARED_KEYS = ['family','study','done','stamps','todos','mission','meals','events','health','praise','allowance'];
 var DEVICE_ID = 'd' + Math.random().toString(36).slice(2, 8) + Date.now().toString(36).slice(-3);
+var JOINED_KEY = 'uri-family-record:joined';
+/* 처음 만든 기본 항목들은 합치지 않아요(가족이 지운 기본 항목이 되살아나지 않도록) */
+var DEFAULT_IDS = { st1:1, st2:1, st3:1, st4:1, sj1:1, sj2:1, sj3:1, td1:1, td2:1, td3:1, td4:1, td5:1, td6:1, cw1:1 };
 
 var fb = {
   status: 'connecting', ready: false, loading: false, db: null, ref: null,
@@ -2728,6 +2731,73 @@ function markPendingMsg(id){
 }
 function forgetPendingMsg(id){
   if (id && fb.pendingMsgs[id]) delete fb.pendingMsgs[id];
+}
+
+/* 이 기기에만 쌓여 있던 기록(예전 버전 사용분)을 처음 연결할 때 한 번 합쳐 줘요 */
+function mergeById(remoteArr, localArr){
+  var seen = {}, out = [];
+  (arrOf(remoteArr)).forEach(function(x){
+    if (isObj(x) && x.id && !seen[x.id]){ seen[x.id] = 1; out.push(x); }
+  });
+  (arrOf(localArr)).forEach(function(x){
+    if (!isObj(x) || !x.id || seen[x.id] || DEFAULT_IDS[x.id]) return;
+    seen[x.id] = 1;
+    out.push(x);
+  });
+  return out;
+}
+function mergeLocalInto(next){
+  var had = JSON.stringify(next);
+  ALL.forEach(function(id){
+    if (Array.isArray(next.study[id])) next.study[id] = mergeById(next.study[id], state.study[id]);
+    if (Array.isArray(next.todos[id])) next.todos[id] = mergeById(next.todos[id], state.todos[id]);
+  });
+  if (Array.isArray(next.praise) && Array.isArray(state.praise)) next.praise = mergeById(next.praise, state.praise);
+  if (Array.isArray(next.events) && Array.isArray(state.events)) next.events = mergeById(next.events, state.events);
+  next.praise = (next.praise || []).filter(function(pr){ return pr.text; });
+  next.events = (next.events || []).filter(function(ev){ return ev.title; });
+  next.chat.messages = mergeById(next.chat.messages, state.chat.messages)
+    .filter(function(m){ return m.kind === 'sticker' || m.text; })
+    .sort(function(a, b){ return numOf(a.at, 0) - numOf(b.at, 0); });
+
+  Object.keys(state.done || {}).forEach(function(dk){
+    if (!isValidYmd(dk)) return;
+    if (!next.done[dk]) next.done[dk] = {};
+    ALL.forEach(function(id){
+      var src = (state.done[dk] || {})[id];
+      if (!isObj(src)) return;
+      if (!next.done[dk][id]) next.done[dk][id] = {};
+      Object.keys(src).forEach(function(k){
+        if (!Object.prototype.hasOwnProperty.call(next.done[dk][id], k)) next.done[dk][id][k] = src[k];
+      });
+    });
+  });
+  KIDS.forEach(function(id){
+    var all = {};
+    arrOf(next.stamps[id]).concat(arrOf(state.stamps[id])).forEach(function(d){ if (isValidYmd(d)) all[d] = 1; });
+    next.stamps[id] = Object.keys(all).sort();
+    if (next.allowance[id] && state.allowance[id]){
+      next.allowance[id].ledger = mergeById(next.allowance[id].ledger, state.allowance[id].ledger);
+    }
+  });
+  ALL.forEach(function(id){
+    if (!isObj(next.family[id])) return;
+    var local = (state.family[id] && numOf(state.family[id].stars, 0)) || 0;
+    next.family[id].stars = Math.max(numOf(next.family[id].stars, 0), local);
+  });
+  var d = today();
+  if (state.meals[d] && next.meals[d]){
+    MEAL_SLOTS.forEach(function(slot){
+      if (!next.meals[d][slot.k] && state.meals[d][slot.k]) next.meals[d][slot.k] = state.meals[d][slot.k];
+    });
+  }
+  return JSON.stringify(next) !== had;
+}
+function hasJoined(){
+  try { return localStorage.getItem(JOINED_KEY) === '1'; } catch (e){ return true; }
+}
+function markJoined(){
+  try { localStorage.setItem(JOINED_KEY, '1'); } catch (e){}
 }
 
 function fbSetStatus(s, err){
@@ -2880,17 +2950,22 @@ function fbPush(force){
 function fbSeed(){
   if (fb.seeding || !fb.ready || !fb.ref) return;
   fb.seeding = true;
-  var payload = fbShared();
-  payload.v = SCHEMA_VERSION;
-  payload.meta = { at: Date.now(), by: DEVICE_ID };
+  var build = function(){
+    var payload = fbShared();
+    payload.v = SCHEMA_VERSION;
+    payload.meta = { at: Date.now(), by: DEVICE_ID };
+    return payload;
+  };
   var release = function(){ setTimeout(function(){ fb.seeding = false; }, 1000); };
   try {
-    fb.ref.transaction(function(cur){ return cur === null ? payload : undefined; }, function(err, committed, snap){
+    fb.ref.transaction(function(cur){ return cur === null ? build() : undefined; }, function(err, committed, snap){
       release();
       if (err){ fbSetStatus('offline', err); return; }
       if (committed){
-        fb.lastHash = fbHash();
         fb.lastSyncAt = Date.now();
+        /* 심는 사이에 바뀐 내용이 있을 수 있으니 한 번 더 현재 상태로 맞춰요 */
+        fb.lastHash = null;
+        queuePush();
         paintSyncChip();
         return;
       }
@@ -2917,6 +2992,9 @@ function fbOnRemote(val){
   SHARED_KEYS.forEach(function(k){ cand[k] = val[k]; });
   cand.chat = { sender: state.chat.sender, locked: state.chat.locked, messages: remoteMsgs };
   var next = normalize(cand);
+  var firstJoin = !hasJoined();
+  var merged = false;
+  if (firstJoin) merged = mergeLocalInto(next);
 
   /* 같은 순간에 두 기기가 보내 메시지가 유실되지 않도록, 내가 방금 보낸 메시지는 살려 둬요 */
   var seen = {};
@@ -2948,7 +3026,8 @@ function fbOnRemote(val){
     fbFlash();
   }
   fb.lastHash = after;
-  if (rescued){ fb.lastHash = null; queuePush(); }
+  if (firstJoin) markJoined();
+  if (rescued || merged){ fb.lastHash = null; queuePush(); }
   paintSyncChip();
 }
 
