@@ -4269,7 +4269,7 @@ function renderPlay(){
     var ti = valTierOf(a.id), tr = ti ? valTier(ti.tier) : null;
     var list = (isObj(state.valorant.skins) && Array.isArray(state.valorant.skins[a.id])) ? state.valorant.skins[a.id] : [];
     var thumbs = list.slice(0, 3).map(function(k){
-      return k.icon ? '<img src="' + esc(k.icon) + '" alt="" loading="lazy" referrerpolicy="no-referrer">' : '';
+      return k.icon ? '<img src="' + esc(k.icon) + '" alt="" loading="lazy" referrerpolicy="no-referrer"' + (k.alt ? ' data-alt="' + esc(k.alt) + '"' : '') + '>' : '';
     }).join('');
     return '<button class="val-accrow' + (acc && a.id === acc.id ? ' on' : '') + '" data-act="val-acc" data-id="' + a.id + '">' +
       '<span class="nm">' + esc(a.label || a.name) + '<span class="tg"> #' + esc(a.tag) + '</span></span>' +
