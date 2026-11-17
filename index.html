@@ -461,6 +461,15 @@ select.field{padding:10px 8px;height:44px;background:#fff}
 .val-accs{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:10px;align-items:center}
 .val-acc{border:1.5px solid #F3D2DE;background:#fff;border-radius:999px;padding:6px 11px;font-size:12px;font-weight:800;color:#B85A76;cursor:pointer;white-space:nowrap}
 .val-acc.on{background:#FFE9F1;border-color:#F0A9C0;color:#A24663}
+.val-accrow{display:flex;align-items:center;gap:7px;width:100%;background:#fff;border:1.5px solid #F3E4EA;border-radius:14px;padding:8px 10px;margin-bottom:7px;cursor:pointer;text-align:left}
+.val-accrow:last-child{margin-bottom:0}
+.val-accrow.on{border-color:#F0A9C0;background:#FFF7FA;box-shadow:var(--shadow-sm)}
+.val-accrow .nm{font-size:12.5px;font-weight:900;flex:1 1 auto;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.val-accrow .tg{font-size:10.5px;color:#B08A9A;font-weight:800}
+.val-accrow .tr{font-size:11px;font-weight:900;white-space:nowrap;flex:0 0 auto}
+.val-accrow .th{display:flex;gap:2px;flex:0 0 auto}
+.val-accrow .th img{width:26px;height:16px;object-fit:contain;background:#FAF3EC;border-radius:5px}
+.val-accrow .ct{font-size:11px;font-weight:900;color:#B85A76;white-space:nowrap;flex:0 0 auto}
 .val-tier{display:flex;align-items:center;gap:10px;background:#fff;border-radius:18px;border:1.5px solid #F3D2DE;padding:12px}
 .val-tier-emo{font-size:30px;line-height:1;flex:0 0 auto}
 .val-tier-main{flex:1 1 auto;min-width:0}
@@ -1276,9 +1285,10 @@ function normalize(raw){
       });
       s.valorant.tiers = tiers;
     }
-    if (Array.isArray(va.skins)){
-      var skinSeen = {};
-      s.valorant.skins = va.skins.filter(isObj).map(function(k){
+    /* 보유 스킨: 계정별 보관함. 예전 공용 배열이면 기본(첫) 계정으로 옮겨요 */
+    var readSkinList = function(list){
+      var seen = {};
+      return arrOf(list).filter(isObj).map(function(k){
         return {
           id: trimStr(k.id, 60),
           name: trimStr(k.name, 60),
@@ -1287,11 +1297,23 @@ function normalize(raw){
           at: numOf(k.at, Date.now())
         };
       }).filter(function(k){
-        if (!k.id || !k.name || skinSeen[k.id]) return false;
-        skinSeen[k.id] = 1;
+        if (!k.id || !k.name || seen[k.id]) return false;
+        seen[k.id] = 1;
         return true;
       }).slice(0, 300);
+    };
+    var skinMap = {};
+    if (Array.isArray(va.skins)){
+      var firstId = s.valorant.accounts[0] ? s.valorant.accounts[0].id : '';
+      if (firstId) skinMap[firstId] = readSkinList(va.skins);
+    } else if (isObj(va.skins)){
+      Object.keys(va.skins).forEach(function(ak){
+        if (!Array.isArray(va.skins[ak])) return;
+        var list = readSkinList(va.skins[ak]);
+        if (list.length) skinMap[ak] = list;
+      });
     }
+    s.valorant.skins = skinMap;
   }
 
   if (isObj(raw.ui)){
@@ -4047,7 +4069,9 @@ function skinResultsHTML(){
   if (!skins.items) return '<div class="val-empty">스킨 이름을 검색해 보세요 (예: 프라임, 아라미스)</div>';
   var q = String(valQuery || '').trim().toLowerCase();
   var have = {};
-  (state.valorant.skins || []).forEach(function(k){ have[k.id] = 1; });
+  var curAcc = valCurAccount();
+  var ownedList = (curAcc && isObj(state.valorant.skins) && Array.isArray(state.valorant.skins[curAcc.id])) ? state.valorant.skins[curAcc.id] : [];
+  ownedList.forEach(function(k){ have[k.id] = 1; });
   var out;
   if (!q){
     out = skins.items.slice(0, 9);
@@ -4090,18 +4114,32 @@ function paintSkins(){
   if (box){ box.innerHTML = skinResultsHTML(); return; }
   softRender();
 }
+function valSkins(accId){
+  if (!isObj(state.valorant.skins)) state.valorant.skins = {};
+  if (!Array.isArray(state.valorant.skins[accId])) state.valorant.skins[accId] = [];
+  return state.valorant.skins[accId];
+}
+function valSkinCount(accId){
+  var m = state.valorant.skins;
+  return (isObj(m) && Array.isArray(m[accId])) ? m[accId].length : 0;
+}
 function addSkin(id){
+  var acc = valCurAccount();
+  if (!acc){ toast('먼저 계정을 골라 주세요'); return; }
   var item = null;
   (skins.items || []).forEach(function(it){ if (it.id === id) item = it; });
   if (!item) return;
-  if ((state.valorant.skins || []).some(function(k){ return k.id === id })){ toast('이미 담겨 있어요'); return; }
-  state.valorant.skins.unshift({ id: item.id, name: item.name, icon: item.icon, alt: item.alt || '', at: Date.now() });
-  if (state.valorant.skins.length > 300) state.valorant.skins.length = 300;
+  var list = valSkins(acc.id);
+  if (list.some(function(k){ return k.id === id; })){ toast('이미 담겨 있어요'); return; }
+  list.unshift({ id: item.id, name: item.name, icon: item.icon, alt: item.alt || '', at: Date.now() });
+  if (list.length > 300) list.length = 300;
   save(); render();
-  toast(item.name + ' 스킨을 보관함에 담았어요');
+  toast(item.name + ' → ' + (acc.label || acc.name) + ' 보관함에 담았어요');
 }
 function deleteSkin(id){
-  state.valorant.skins = (state.valorant.skins || []).filter(function(k){ return k.id !== id; });
+  var acc = valCurAccount();
+  if (!acc) return;
+  state.valorant.skins[acc.id] = valSkins(acc.id).filter(function(k){ return k.id !== id; });
   save(); render();
   toast('보관함에서 뺐어요');
 }
@@ -4199,8 +4237,9 @@ function renderPlay(){
   var t = acc ? valTierOf(acc.id) : null;
   var tier = t ? valTier(t.tier) : null;
   var accChips = accs.map(function(a){
+    var n = valSkinCount(a.id);
     return '<button class="val-acc' + (acc && a.id === acc.id ? ' on' : '') + '" data-act="val-acc" data-id="' + a.id + '">' +
-      esc(a.label || a.name) + (a.tag ? ' #' + esc(a.tag) : '') + '</button>';
+      esc(a.label || a.name) + (a.tag ? ' #' + esc(a.tag) : '') + (n ? ' · ' + n : '') + '</button>';
   }).join('');
 
   var tierCard = acc
@@ -4224,16 +4263,31 @@ function renderPlay(){
       '</div>'
     : '';
 
-  var skinList = state.valorant.skins || [];
-  var skinGrid = skinList.length
-    ? '<div class="val-skin-grid">' + skinList.map(function(k){
+  /* 계정별 보관함 한눈에 보기 */
+  var accRows = accs.map(function(a){
+    var ti = valTierOf(a.id), tr = ti ? valTier(ti.tier) : null;
+    var list = (isObj(state.valorant.skins) && Array.isArray(state.valorant.skins[a.id])) ? state.valorant.skins[a.id] : [];
+    var thumbs = list.slice(0, 3).map(function(k){
+      return k.icon ? '<img src="' + esc(k.icon) + '" alt="" loading="lazy" referrerpolicy="no-referrer">' : '';
+    }).join('');
+    return '<button class="val-accrow' + (acc && a.id === acc.id ? ' on' : '') + '" data-act="val-acc" data-id="' + a.id + '">' +
+      '<span class="nm">' + esc(a.label || a.name) + '<span class="tg"> #' + esc(a.tag) + '</span></span>' +
+      '<span class="tr" style="color:' + (tr ? tr.c : '#B5A18C') + '">' + (tr ? esc(tr.n) : '티어 미기록') + '</span>' +
+      '<span class="th">' + thumbs + '</span>' +
+      '<span class="ct">' + list.length + '개</span>' +
+    '</button>';
+  }).join('');
+
+  var curSkins = acc ? valSkins(acc.id) : [];
+  var skinGrid = curSkins.length
+    ? '<div class="val-skin-grid">' + curSkins.map(function(k){
         return '<div class="val-skin">' +
           (k.icon ? '<img src="' + esc(k.icon) + '" alt="" loading="lazy" referrerpolicy="no-referrer"' + (k.alt ? ' data-alt="' + esc(k.alt) + '"' : '') + '>' : '') +
           '<span class="nm">' + esc(k.name) + '</span>' +
           '<button class="del" data-act="val-skin-del" data-id="' + esc(k.id) + '" aria-label="보관함에서 빼기">✕</button>' +
         '</div>';
       }).join('') + '</div>'
-    : '<div class="val-empty">아직 담은 스킨이 없어요. 위에서 이름으로 찾아 담아 보세요.</div>';
+    : '<div class="val-empty">' + (acc ? esc(acc.label || acc.name) + ' 계정에 담은 스킨이 아직 없어요. 아래에서 찾아 담아 보세요.' : '계정을 먼저 추가해 주세요.') + '</div>';
 
   return '' +
     '<div class="card card--pink">' +
@@ -4248,12 +4302,20 @@ function renderPlay(){
     '</div>' +
     '<div class="card">' +
       '<div class="card-hd">' +
-        '<div class="card-title">🔍 스킨 찾기</div>' +
-        '<div class="mini-pill">보유 ' + skinList.length + '개</div>' +
+        '<div class="card-title">👛 계정별 보관함</div>' +
+        '<div class="mini-pill">계정 ' + accs.length + '개</div>' +
       '</div>' +
-      '<div class="card-desc" style="margin:0 0 8px">발로란트 공식 에셋(valorant-api.com)에서 스킨 이름을 찾아 고화질 이미지까지 자동으로 붙여요.</div>' +
+      '<div class="card-desc" style="margin:0 0 8px">계정을 누르면 그 계정의 티어와 보유 스킨으로 바로 바뀌어요.</div>' +
+      (accRows || '<div class="empty">계정이 없어요</div>') +
+    '</div>' +
+    '<div class="card--mint card">' +
+      '<div class="card-hd">' +
+        '<div class="card-title">🔍 스킨 찾기</div>' +
+        '<div class="mini-pill mini-pill--mint">' + (acc ? esc(acc.label || acc.name) + ' 계정' : '계정 없음') + '</div>' +
+      '</div>' +
+      '<div class="card-desc" style="margin:0 0 8px">발로란트 공식 에셋(valorant-api.com)에서 이름으로 찾아 이미지까지 자동으로 붙여요. 담으면 지금 고른 계정 보관함으로 들어가요.</div>' +
       '<div class="val-search">' +
-        '<input class="field field--sm grow" id="skinQuery" data-enter="val-skin-search" maxlength="30" placeholder="예: 프라임, 아라미스, 너키" value="' + esc(valQuery) + '">' +
+        '<input class="field field--sm grow" id="skinQuery" data-enter="val-skin-search" maxlength="30" placeholder="예: 프라임, 약탈자, 너키" value="' + esc(valQuery) + '">' +
         '<button class="btn btn--sm btn--mint" data-act="val-skin-search">검색</button>' +
       '</div>' +
       '<div class="val-res" id="valRes">' + skinResultsHTML() + '</div>' +
@@ -4261,10 +4323,10 @@ function renderPlay(){
     '<div class="card card--sun">' +
       '<div class="card-hd">' +
         '<div class="card-title">🧥 보유 스킨 보관함</div>' +
-        '<div class="mini-pill mini-pill--pink">' + skinList.length + '개</div>' +
+        '<div class="mini-pill mini-pill--pink">' + (acc ? esc(acc.label || acc.name) + ' · ' + curSkins.length + '개' : '0개') + '</div>' +
       '</div>' +
       skinGrid +
-      '<div class="foot-note" style="padding:8px 0 0">스킨 이미지는 라이엇 공식 에셋 API에서 불러와요 · 가족 모두에게 함께 보여요</div>' +
+      '<div class="foot-note" style="padding:8px 0 0">스킨 이미지는 라이엇 공식 에셋 API에서 불러와요 · 계정마다 따로 보관되고 가족 모두에게 보여요</div>' +
     '</div>';
 }
 function doSkinSearch(){
@@ -4658,6 +4720,24 @@ function fbOnRemote(val){
     if (next.stampGoal !== 30) needPush = true;
   }
   /* 예전 화면(새 필드 없는 버전)이 올린 값이어도 학원 숙제·급식 학교·성장 기록·발로란트 기록을 지우지 않아요 */
+  /* 예전 버전(공용 스킨 배열)이 올린 값: 계정별 보관함을 지키고 그 배열은 기본 계정으로 합쳐요 */
+  if (isObj(val.valorant) && Array.isArray(val.valorant.skins)){
+    var mergedSkins = {};
+    [next.valorant.skins, state.valorant.skins].forEach(function(src){
+      if (!isObj(src)) return;
+      Object.keys(src).forEach(function(ak){
+        if (!Array.isArray(src[ak])) return;
+        if (!mergedSkins[ak]) mergedSkins[ak] = [];
+        var seenS = {};
+        mergedSkins[ak].forEach(function(k){ seenS[k.id] = 1; });
+        src[ak].forEach(function(k){
+          if (isObj(k) && k.id && !seenS[k.id]){ seenS[k.id] = 1; mergedSkins[ak].push(k); }
+        });
+      });
+    });
+    next.valorant = { accounts: next.valorant.accounts, cur: next.valorant.cur, tiers: next.valorant.tiers, skins: mergedSkins };
+    needPush = true;
+  }
   var freshDefaults = null;
   NEW_SHARED_KEYS.forEach(function(k){
     if (val[k] !== undefined) return;
