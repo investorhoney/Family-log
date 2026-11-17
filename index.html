@@ -494,6 +494,47 @@ select.field{padding:10px 8px;height:44px;background:#fff}
 .val-tier-opt{border:1.5px solid #F0E4D3;background:#fff;border-radius:12px;padding:8px 4px;font-size:11.5px;font-weight:800;color:#8B7460;cursor:pointer;text-align:center;line-height:1.25}
 .val-tier-opt.on{background:#FFE9F1;border-color:#F0A9C0;color:#A24663}
 
+/* ---------- 발로란트 추억 사진첩 ---------- */
+.alb-chips{display:flex;gap:6px;flex-wrap:wrap;margin:0 0 10px}
+.alb-chip{border:1.5px solid #F2DFC9;background:#fff;border-radius:999px;padding:6px 11px;font-size:12px;font-weight:800;color:#A9866A;cursor:pointer;white-space:nowrap;line-height:1.2}
+.alb-chip b{font-weight:900;color:#C08A52;margin-left:2px}
+.alb-chip.on{background:#FFF0DF;border-color:#F0C49B;color:#9C5F22}
+.alb-chip.on b{color:#9C5F22}
+.alb-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:9px}
+.alb-card{background:#fff;border-radius:16px;border:1.5px solid #F3E6D5;overflow:hidden;display:flex;flex-direction:column;cursor:pointer;text-align:left;padding:0;min-width:0;box-shadow:var(--shadow-sm);font:inherit;color:inherit}
+.alb-card:active{transform:scale(.99)}
+.alb-thumb{position:relative;display:block;width:100%;aspect-ratio:16/10;background:#FBF6EE;overflow:hidden}
+.alb-thumb img{width:100%;height:100%;object-fit:cover;display:block}
+.alb-thumb .ph{width:100%;height:100%;display:grid;place-items:center;font-size:26px;background:linear-gradient(150deg,#FFF6E9,#FDEBDA)}
+.alb-badge{position:absolute;right:6px;bottom:6px;background:rgba(38,26,18,.62);color:#fff;border-radius:999px;padding:3px 8px;font-size:10px;font-weight:800;line-height:1.25}
+.alb-body{padding:7px 9px 9px;display:flex;flex-direction:column;gap:3px;min-width:0}
+.alb-who{align-self:flex-start;background:#FFF1E1;color:#9C5F22;border-radius:999px;padding:2px 8px;font-size:10px;font-weight:900;line-height:1.4}
+.alb-t{font-size:12px;font-weight:900;color:#6B5544;line-height:1.3;overflow:hidden;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;word-break:break-word}
+.alb-m{font-size:10.5px;color:#A08A76;line-height:1.35;overflow:hidden;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;word-break:break-word}
+.alb-d{font-size:10px;color:#C0AF9C;font-weight:800;line-height:1.45;word-break:keep-all}
+.alb-empty{font-size:12px;color:#BFA98F;padding:16px 8px;text-align:center;border:1.5px dashed #F0E1CC;border-radius:14px;line-height:1.65;background:#FFFCF6}
+.alb-pick{display:flex;gap:10px;align-items:center;margin:2px 0 10px}
+.alb-prev{width:76px;height:76px;border-radius:12px;border:1.5px dashed #E9D8C2;background:#FCF8F1;display:grid;place-items:center;overflow:hidden;flex:0 0 auto;font-size:22px}
+.alb-prev img{width:100%;height:100%;object-fit:cover}
+.alb-side{flex:1 1 auto;min-width:0}
+.alb-side .btn{width:100%}
+.alb-big{width:100%;max-height:56vh;object-fit:contain;border-radius:16px;display:block;background:#FBF6EE}
+.alb-video{width:100%;max-height:52vh;border-radius:16px;display:block;background:#1B1410;margin-top:8px}
+.alb-vbox{margin-top:8px}
+.alb-vload{font-size:12px;color:#BFA98F;padding:18px 10px;text-align:center;border:1.5px dashed #F0E1CC;border-radius:14px;background:#FFFCF6;line-height:1.6}
+.alb-frame{width:100%;aspect-ratio:16/9;border:0;border-radius:16px;display:block;background:#1B1410}
+.alb-meta{font-size:11.5px;color:#A08874;font-weight:800;margin:0 0 8px}
+.alb-tag{position:absolute;left:6px;top:6px;background:rgba(38,26,18,.6);color:#fff;border-radius:999px;padding:2px 7px;font-size:10px;font-weight:800;line-height:1.3}
+.alb-short{display:flex;align-items:center;gap:9px;width:100%;background:#fff;border:1.5px solid #F3E6D5;border-radius:14px;padding:7px;cursor:pointer;text-align:left;font:inherit;color:inherit;min-width:0}
+.alb-short:active{transform:scale(.99)}
+.alb-short-th{width:54px;height:42px;border-radius:10px;overflow:hidden;flex:0 0 auto;background:#FBF6EE;display:grid;place-items:center}
+.alb-short-th img{width:100%;height:100%;object-fit:cover;display:block}
+.alb-short-th .ph{font-size:18px}
+.alb-short-body{flex:1 1 auto;min-width:0;display:flex;flex-direction:column;gap:2px}
+.alb-short-body .alb-t{-webkit-line-clamp:1}
+.field--area{font-family:inherit;resize:vertical;min-height:62px;line-height:1.45}
+@media(min-width:560px){.alb-grid{grid-template-columns:repeat(3,minmax(0,1fr))}}
+
 /* ---------- 날씨 주간 ---------- */
 .wx-outfit{display:flex;align-items:flex-start;gap:6px;background:#FFFDF3;border:1px solid #F6E9BF;border-radius:14px;padding:8px 10px;margin-top:9px;font-size:12.5px;font-weight:700;color:#8A6A2A;line-height:1.45}
 .wx-outfit b{font-weight:900;color:#7A5A1E;margin-right:3px}
@@ -550,6 +591,10 @@ select.field{padding:10px 8px;height:44px;background:#fff}
 var STORE_KEY = 'uri-family-record:v1';
 var WEATHER_CACHE_KEY = 'uri-family-record:weather';
 var SCHEMA_VERSION = 1;
+/* 발로란트 추억 사진첩: 한 장에 담는 사진 크기와 사진첩 칸 수 */
+var ALB_MAX = 60;
+var ALB_PHOTO_BYTES = 200 * 1024;
+var ALB_SIDE = 1080;
 
 /* ---------------------------- 가족 ---------------------------- */
 var PEOPLE = [
@@ -624,7 +669,7 @@ var TABS = [
   { id:'praise',   label:'칭찬', icon:'star' },
   { id:'money',    label:'용돈', icon:'piggy' },
   { id:'play',     label:'취미', icon:'play' },
-  { id:'chat',     label:'채팅', icon:'chat' }
+  { id:'album',    label:'사진첩', icon:'camera' }
 ];
 
 /* ---------------------------- 학원 숙제 과목 ---------------------------- */
@@ -764,6 +809,7 @@ function ico(name){
     star: '<path d="m12 4 2.4 5 5.4.7-3.9 3.7 1 5.3L12 16.2 7.1 18.7l1-5.3L4.2 9.7 9.6 9z"/>',
     piggy: '<path d="M4 12.2a6.6 6.6 0 0 1 6.6-6.6h3A6.6 6.6 0 0 1 20 12.2v2.3a2 2 0 0 1-2 2h-1v1.6h-2.5v-1.6h-4v1.6H8v-1.6H6a2 2 0 0 1-2-2z"/><circle cx="15.4" cy="11.3" r=".9" fill="currentColor" stroke="none"/><path d="M6 12.6c-1.5 0-2.4.9-2.4.9"/>',
     play: '<rect x="2.6" y="7.2" width="18.8" height="10.4" rx="5"/><path d="M7.2 11.2v2.4M6 12.4h2.4"/><circle cx="16.2" cy="11.6" r=".95" fill="currentColor" stroke="none"/><circle cx="18" cy="13.6" r=".95" fill="currentColor" stroke="none"/>',
+    camera: '<rect x="3" y="7.2" width="18" height="13.4" rx="3.4"/><circle cx="12" cy="13.9" r="3.7"/><path d="M8.4 7.2 9.7 4.4h4.6l1.3 2.8"/><circle cx="17.6" cy="10.7" r=".75" fill="currentColor" stroke="none"/>',
     chat: '<path d="M4 6.7A2.7 2.7 0 0 1 6.7 4h10.6A2.7 2.7 0 0 1 20 6.7v6.8a2.7 2.7 0 0 1-2.7 2.7H10l-4.6 4v-4A2.7 2.7 0 0 1 4 13.5z"/><circle cx="9" cy="10" r=".85" fill="currentColor" stroke="none"/><circle cx="12" cy="10" r=".85" fill="currentColor" stroke="none"/><circle cx="15" cy="10" r=".85" fill="currentColor" stroke="none"/>'
   }[name] || '';
   return '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">' + paths + '</svg>';
@@ -996,9 +1042,11 @@ function defaultState(){
       ],
       cur: 'va1',
       tiers: {},
-      skins: []
+      skins: [],
+      /* 📸 추억 사진첩: 사진(자동 압축)·영상 링크·메모를 모아 둬요 */
+      album: []
     },
-    ui: { tab:'home', kid:'taeju', growthMetric:'h', lunchView:'today' }
+    ui: { tab:'home', kid:'taeju', growthMetric:'h', lunchView:'today', albumFilter:'all', albumBy:'', albumKind:'family', albumWho:'' }
   };
 }
 
@@ -1313,6 +1361,8 @@ function normalize(raw){
       });
     }
     s.valorant.skins = skinMap;
+    /* 📸 추억 사진첩: 배열이면 사진·영상 링크를 안전하게 다듬어 담아요 */
+    if (Array.isArray(va.album)) s.valorant.album = albReadList(va.album);
   }
 
   if (isObj(raw.ui)){
@@ -1322,6 +1372,10 @@ function normalize(raw){
     s.ui.praiseTo = BY_ID[raw.ui.praiseTo] ? raw.ui.praiseTo : 'taeju';
     s.ui.growthMetric = (raw.ui.growthMetric === 'b' || raw.ui.growthMetric === 'w') ? raw.ui.growthMetric : 'h';
     s.ui.lunchView = raw.ui.lunchView === 'week' ? 'week' : 'today';
+    s.ui.albumFilter = BY_ID[raw.ui.albumFilter] ? raw.ui.albumFilter : 'all';
+    s.ui.albumBy = BY_ID[raw.ui.albumBy] ? raw.ui.albumBy : '';
+    s.ui.albumKind = raw.ui.albumKind === 'valorant' ? 'valorant' : 'family';
+    s.ui.albumWho = BY_ID[raw.ui.albumWho] ? raw.ui.albumWho : '';
   }
 
   return s;
@@ -1797,7 +1851,7 @@ function render(){
   if (!view) return;
   var map = {
     home: renderHome, routine: renderRoutine, meals: renderMeals, schedule: renderSchedule,
-    health: renderHealth, praise: renderPraise, money: renderMoney, play: renderPlay, chat: renderChat
+    health: renderHealth, praise: renderPraise, money: renderMoney, play: renderPlay, album: renderAlbum
   };
   view.innerHTML = (map[state.ui.tab] || renderHome)();
   renderHeader();
@@ -2781,7 +2835,7 @@ function handleImportFile(file){
 function resetAll(){
   confirmModal(
     '전체 초기화',
-    '별, 도장, 용돈, 채팅까지 <b>모든 기록이 사라져요</b>.<br>먼저 ⚙️ 설정에서 백업해 두는 걸 추천해요.',
+    '별, 도장, 용돈, 사진첩까지 <b>모든 기록이 사라져요</b>.<br>먼저 ⚙️ 설정에서 백업해 두는 걸 추천해요.',
     '초기화',
     function(){
       state = defaultState();
@@ -3332,6 +3386,25 @@ var ACTIONS = {
   'val-skin-search': doSkinSearch,
   'val-skin-add': function(el){ addSkin(el.dataset.id); },
   'val-skin-del': function(el){ deleteSkin(el.dataset.id); },
+
+  'alb-add': openAlbumAdd,
+  'alb-save': saveAlbum,
+  'alb-view': function(el){ openAlbumView(el.dataset.id); },
+  'alb-del': function(el){ deleteAlbum(el.dataset.id); },
+  'alb-vid-clear': albClearPickedVideo,
+  'alb-filter': function(el){
+    var k = el.dataset.id;
+    state.ui.albumFilter = (k === 'val' || BY_ID[k]) ? k : 'all';
+    save(); render();
+  },
+  'alb-open': function(){
+    state.ui.tab = 'album'; save(); render(); scrollTop();
+  },
+  'alb-add-val': function(){
+    state.ui.tab = 'album'; state.ui.albumKind = 'valorant'; state.ui.albumFilter = 'val';
+    save(); render(); scrollTop();
+    openAlbumAdd();
+  },
 
   'health-toggle': function(el){ toggleHealth(el.dataset.person, el.dataset.id); },
 
@@ -4333,13 +4406,631 @@ function renderPlay(){
       skinGrid +
       otherHint +
       '<div class="foot-note" style="padding:8px 0 0">스킨 이미지는 라이엇 공식 에셋 API에서 불러와요 · 계정마다 따로 보관되고 가족 모두에게 보여요</div>' +
-    '</div>';
+    '</div>' +
+    renderAlbumShortcut();
 }
 function doSkinSearch(){
   var el = document.getElementById('skinQuery');
   valQuery = el ? String(el.value || '').slice(0, 30) : '';
   if (!skins.items) loadSkins();
   paintSkins();
+}
+
+/* ============================ 📸 발로란트 추억 사진첩 ============================ */
+var ALB_WHO = ['dad', 'mom', 'taeju', 'juwon'];
+var ALB_VIDEO_MAX = 7 * 1024 * 1024;             /* 사진첩에 바로 담을 수 있는 영상 파일 크기(RTDB 한 값 한도) */
+var ALB_RTDB_VIDEO_CHARS = 9500000;              /* RTDB 한 값에 담을 수 있는 base64 길이 한계(약 7MB 원본) */
+var albDraft = { img:'', bytes:0, w:0, h:0, busy:false, file:null, thumb:'', dur:0, vbytes:0 };
+var albBlobUrl = '';
+
+function albList(){
+  if (!isObj(state.valorant)) state.valorant = defaultState().valorant;
+  if (!Array.isArray(state.valorant.album)) state.valorant.album = [];
+  return state.valorant.album;
+}
+/* 영상 파일 본체는 state에 넣지 않고 방 옆 videos/에 따로 보관해요(사진첩에는 썸네일만) */
+function albVideoBase(){ return String(ROOM_PATH || '').replace(/\/state$/, '') + '/videos'; }
+function albDbUrl(){ return FB_CONFIG.databaseURL; }
+/* 저장된 기록을 안전하게 다듬어요(사진·썸네일은 data:image, 링크는 http(s)만) */
+function albImgOk(v, max){
+  return !!v && typeof v === 'string' && v.length < (max || 400000) && /^data:image\/(jpeg|jpg|png|webp);base64,/i.test(v.slice(0, 40));
+}
+function albReadList(list){
+  var seen = {}, out = [];
+  arrOf(list).forEach(function(x){
+    if (!isObj(x)) return;
+    var id = strOf(x.id, '').slice(0, 40);
+    if (!id || seen[id]) return;
+    seen[id] = 1;
+    var img = albImgOk(strOf(x.img, '')) ? x.img : '';
+    var thumb = albImgOk(strOf(x.thumb, ''), 200000) ? x.thumb : '';
+    var vid = strOf(x.vid, '').replace(/\s+/g, '').slice(0, 300);
+    if (vid && !/^https?:\/\//i.test(vid)) vid = '';
+    var videoId = strOf(x.videoId, '').replace(/[^A-Za-z0-9_-]/g, '').slice(0, 40);
+    var at = numOf(x.at, 0);
+    if (!at) at = Date.now() - out.length * 1000;
+    var day = isValidYmd(x.date) ? x.date : ymd(new Date(at));
+    var kind = (x.type === 'video' || videoId) ? 'video' : 'photo';
+    var cat = (x.kind === 'valorant') ? 'valorant' : 'family';
+    out.push({
+      id: id,
+      who: BY_ID[x.who] ? x.who : (BY_ID[x.author] ? x.author : 'dad'),
+      by: BY_ID[x.by] ? x.by : '',
+      title: trimStr(x.title, 40),
+      memo: strOf(x.memo, '').replace(/\r/g, '').replace(/[ \t]+/g, ' ').trim().slice(0, 200),
+      img: img, vid: vid, date: day, at: at,
+      type: kind,
+      kind: cat,
+      thumb: thumb,
+      videoId: videoId,
+      videoMime: /^video\/[a-z0-9.+-]{2,30}$/i.test(strOf(x.videoMime, '')) ? x.videoMime : 'video/mp4',
+      size: Math.max(0, numOf(x.size, 0)),
+      dur: Math.max(0, Math.min(600, Math.round(numOf(x.dur, 0))))
+    });
+  });
+  out.sort(function(a, b){ return numOf(b.at, 0) - numOf(a.at, 0); });
+  return out.slice(0, ALB_MAX);
+}
+/* 유튜브 주소에서 영상 아이디를 뽑아요(watch·youtu.be·shorts·live·embed) */
+function albYtId(url){
+  var m = String(url || '').match(/(?:youtube\.com\/(?:watch\?(?:[^#]*&)?v=|shorts\/|embed\/|live\/|v\/)|youtu\.be\/)([A-Za-z0-9_-]{6,20})/i);
+  return m ? m[1] : '';
+}
+function albUrlOk(u){ return /^https?:\/\/[^\s]+$/i.test(String(u || '')); }
+function albThumb(it){
+  if (it.img) return it.img;
+  if (it.thumb) return it.thumb;
+  var yt = albYtId(it.vid);
+  return yt ? 'https://i.ytimg.com/vi/' + yt + '/hqdefault.jpg' : '';
+}
+function albDateStr(it){
+  var d = isValidYmd(it && it.date) ? it.date : ymd(new Date(numOf(it && it.at, Date.now())));
+  var p = parseYmd(d);
+  return (p.getMonth() + 1) + '월 ' + p.getDate() + '일';
+}
+/* 올린 날짜·시각(실제 업로드 시각) */
+function albTimeStr(it){
+  var d = new Date(numOf(it && it.at, Date.now()));
+  return pad2(d.getMonth() + 1) + '.' + pad2(d.getDate()) + ' ' + pad2(d.getHours()) + ':' + pad2(d.getMinutes());
+}
+function albFullTimeStr(it){
+  var d = new Date(numOf(it && it.at, Date.now()));
+  return d.getFullYear() + '.' + pad2(d.getMonth() + 1) + '.' + pad2(d.getDate()) + ' ' + pad2(d.getHours()) + ':' + pad2(d.getMinutes());
+}
+function albByOf(it){ return BY_ID[it && it.by] ? it.by : ''; }
+function albKb(b){ return Math.round(numOf(b, 0) / 1024) + 'KB'; }
+function albMb(b){ return (Math.round(numOf(b, 0) / 1048576 * 10) / 10) + 'MB'; }
+function albDataBytes(d){
+  if (typeof d !== 'string') return 0;
+  var i = d.indexOf(',');
+  if (i < 0) return d.length;
+  return Math.round((d.length - i - 1) * 3 / 4);
+}
+function albBadge(it){
+  if (it.videoId) return '🎬 클립' + (it.dur ? ' ' + it.dur + '초' : '');
+  if (it.vid) return albYtId(it.vid) ? '🎬 유튜브' : '🎬 영상';
+  return '';
+}
+function albUploadLine(it){
+  var by = albByOf(it);
+  return (by ? '👤 ' + person(by).name + ' 올림 · ' : '👤 올린 시각 · ') + albTimeStr(it);
+}
+var ALB_VIDEO_SIZE_TIP = '짧은 영상(7MB 이하)은 바로 올라가고, 더 큰 영상은 유튜브·구글 드라이브·원드라이브 링크로 올리면 돼요';
+
+/* ---------------- 사진 고르기 → 캔버스로 줄여서 저장(긴 변 1080px · JPEG · 200KB 이하 목표) ---------------- */
+function albPickFile(input){
+  var file = input && input.files && input.files[0];
+  if (!file) return;
+  if (!/^image\//.test(file.type || '')){ toast('사진 파일만 올릴 수 있어요'); input.value = ''; return; }
+  var info = document.getElementById('albFileInfo');
+  var prev = document.getElementById('albPrev');
+  albDraft.busy = true;
+  if (info) info.textContent = '사진 줄이는 중이에요… (' + albKb(numOf(file.size, 0)) + ')';
+  if (prev) prev.innerHTML = '<span class="tiny">…</span>';
+  albShrink(file, function(res){
+    albDraft.busy = false;
+    if (!res || !res.dataUrl){
+      albDraft.img = ''; albDraft.bytes = 0;
+      if (info) info.textContent = '이 사진은 불러오지 못했어요. 다른 사진으로 골라 주세요.';
+      if (prev) prev.innerHTML = '📷';
+      return;
+    }
+    albDraft.img = res.dataUrl; albDraft.bytes = res.bytes; albDraft.w = res.w; albDraft.h = res.h;
+    if (prev) prev.innerHTML = '<img src="' + res.dataUrl + '" alt="">';
+    if (info) info.textContent = '사진 ' + albKb(res.bytes) + ' · ' + res.w + '×' + res.h + ' (자동으로 줄였어요)';
+  });
+}
+function albShrink(file, cb){
+  var url = '';
+  try { url = URL.createObjectURL(file); } catch (e){ url = ''; }
+  if (!url){
+    var fr = new FileReader();
+    fr.onload = function(){ albShrinkSrc(String(fr.result || ''), cb); };
+    fr.onerror = function(){ cb(null); };
+    fr.readAsDataURL(file);
+    return;
+  }
+  albShrinkSrc(url, function(res){ try { URL.revokeObjectURL(url); } catch (e){} cb(res); });
+}
+function albShrinkSrc(src, cb){
+  var img = new Image();
+  var done = false;
+  var finish = function(res){ if (done) return; done = true; cb(res); };
+  img.onerror = function(){ finish(null); };
+  img.onload = function(){
+    if (done) return;
+    var w = img.naturalWidth || img.width || 0;
+    var h = img.naturalHeight || img.height || 0;
+    if (!w || !h) return finish(null);
+    var plan = [[ALB_SIDE, 0.78], [ALB_SIDE, 0.66], [960, 0.7], [860, 0.62], [760, 0.55]];
+    var best = null;
+    for (var i = 0; i < plan.length; i++){
+      var sc = Math.min(1, plan[i][0] / Math.max(w, h));
+      var cw = Math.max(1, Math.round(w * sc));
+      var ch = Math.max(1, Math.round(h * sc));
+      var d = albCanvasJpeg(img, cw, ch, plan[i][1]);
+      if (!d) continue;
+      best = { dataUrl: d, bytes: albDataBytes(d), w: cw, h: ch };
+      if (best.bytes <= ALB_PHOTO_BYTES) break;
+    }
+    finish(best);
+  };
+  img.src = src;
+  setTimeout(function(){ finish(null); }, 15000);
+}
+function albCanvasJpeg(source, w, h, q){
+  try {
+    var c = document.createElement('canvas');
+    c.width = w; c.height = h;
+    var ctx = c.getContext('2d');
+    if (!ctx) return '';
+    ctx.fillStyle = '#FFFFFF';
+    ctx.fillRect(0, 0, w, h);
+    if (ctx.imageSmoothingQuality) ctx.imageSmoothingQuality = 'high';
+    ctx.drawImage(source, 0, 0, w, h);
+    return c.toDataURL('image/jpeg', q);
+  } catch (e){ return ''; }
+}
+
+/* ---------------- 영상 파일 고르기 → 첫 장면 썸네일만 뽑아 두기 ---------------- */
+function albPickVideo(input){
+  var file = input && input.files && input.files[0];
+  var info = document.getElementById('albVidInfo');
+  var prev = document.getElementById('albVidPrev');
+  var clearBtn = document.getElementById('albVidClear');
+  if (!file) return;
+  if (!/^video\//.test(file.type || '')){ toast('영상 파일만 올릴 수 있어요'); input.value = ''; return; }
+  var maxRaw = Math.floor(ALB_RTDB_VIDEO_CHARS * 3 / 4);
+  if (numOf(file.size, 0) > Math.min(ALB_VIDEO_MAX, maxRaw)){
+    if (info) info.textContent = '이 영상은 ' + albMb(file.size) + '라서 사진첩에 담기엔 커요.';
+    toast(ALB_VIDEO_SIZE_TIP);
+    input.value = '';
+    albDraft.file = null; albDraft.thumb = ''; albDraft.dur = 0; albDraft.vbytes = 0;
+    if (prev) prev.innerHTML = '🎬';
+    if (clearBtn) clearBtn.style.display = 'none';
+    return;
+  }
+  albDraft.busy = true;
+  if (info) info.textContent = '영상 첫 장면을 뽑는 중이에요… (' + albMb(file.size) + ')';
+  if (prev) prev.innerHTML = '<span class="tiny">…</span>';
+  albVideoThumb(file, function(res){
+    albDraft.busy = false;
+    if (!res || !res.thumb){
+      albDraft.file = null; albDraft.thumb = ''; albDraft.dur = 0; albDraft.vbytes = 0;
+      if (info) info.textContent = '이 영상은 브라우저에서 열지 못했어요(MP4·WebM 권장).';
+      if (prev) prev.innerHTML = '🎬';
+      return;
+    }
+    albDraft.file = file;
+    albDraft.thumb = res.thumb;
+    albDraft.dur = res.dur;
+    albDraft.vbytes = numOf(file.size, 0);
+    if (prev) prev.innerHTML = '<img src="' + res.thumb + '" alt="">';
+    if (info) info.textContent = '영상 ' + albMb(file.size) + (res.dur ? ' · ' + res.dur + '초' : '') + ' · 첫 장면만 사진첩에 남고 영상은 따로 보관해요';
+    if (clearBtn) clearBtn.style.display = '';
+  });
+}
+function albClearPickedVideo(){
+  var vi = document.getElementById('albVideoFile');
+  if (vi) vi.value = '';
+  albDraft.file = null; albDraft.thumb = ''; albDraft.dur = 0; albDraft.vbytes = 0;
+  var prev = document.getElementById('albVidPrev');
+  if (prev) prev.innerHTML = '🎬';
+  var info = document.getElementById('albVidInfo');
+  if (info) info.textContent = '7MB 이하 짧은 클립은 첫 장면만 남기고 영상은 따로 보관해요';
+  var clearBtn = document.getElementById('albVidClear');
+  if (clearBtn) clearBtn.style.display = 'none';
+}
+function albVideoThumb(file, cb){
+  var url = '';
+  try { url = URL.createObjectURL(file); } catch (e){ url = ''; }
+  if (!url) return cb(null);
+  var v = document.createElement('video');
+  var done = false;
+  var finish = function(res){
+    if (done) return;
+    done = true;
+    try { v.pause(); } catch (e){}
+    try { v.removeAttribute('src'); v.load(); } catch (e){}
+    try { URL.revokeObjectURL(url); } catch (e){}
+    cb(res);
+  };
+  var grab = function(){
+    var w = v.videoWidth || 0, h = v.videoHeight || 0;
+    if (!w || !h) return finish(null);
+    var plan = [[480, 0.72], [420, 0.66], [360, 0.6]];
+    var best = null;
+    for (var i = 0; i < plan.length; i++){
+      var sc = Math.min(1, plan[i][0] / Math.max(w, h));
+      var cw = Math.max(1, Math.round(w * sc)), ch = Math.max(1, Math.round(h * sc));
+      var d = albCanvasJpeg(v, cw, ch, plan[i][1]);
+      if (!d) continue;
+      best = { thumb: d, bytes: albDataBytes(d) };
+      if (best.bytes <= 30000) break;
+    }
+    finish(best ? { thumb: best.thumb, dur: Math.max(0, Math.round(numOf(v.duration, 0))), w: w, h: h } : null);
+  };
+  v.muted = true;
+  v.playsInline = true;
+  v.preload = 'auto';
+  v.setAttribute('playsinline', '');
+  v.addEventListener('loadeddata', function(){
+    try { v.currentTime = Math.min(0.5, Math.max(0, (v.duration || 1) / 2)); } catch (e){}
+    setTimeout(grab, 260);
+  });
+  v.addEventListener('seeked', function(){ setTimeout(grab, 60); });
+  v.addEventListener('error', function(){ finish(null); });
+  setTimeout(function(){ finish(null); }, 12000);
+  v.src = url;
+}
+
+/* ---------------- 영상 보관: 방 옆 videos/{id} 에만 저장(사진첩엔 썸네일만) ---------------- */
+function albStoreVideo(videoId, file, dataUrl, cb){
+  if (dataUrl.length > ALB_RTDB_VIDEO_CHARS) return cb(false, ALB_VIDEO_SIZE_TIP);
+  var payload = {
+    id: videoId, at: Date.now(),
+    mime: file.type || 'video/mp4',
+    size: numOf(file.size, 0),
+    name: String(file.name || '').slice(0, 80),
+    data: dataUrl
+  };
+  fetch(albDbUrl() + '/' + albVideoBase() + '/' + videoId + '.json', {
+    method: 'PUT',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(payload)
+  }).then(function(res){
+    if (!res.ok) throw new Error('HTTP ' + res.status);
+    cb(true);
+  }).then(null, function(err){
+    cb(false, '영상을 올리지 못했어요' + (err && err.message ? ' (' + err.message + ')' : '') + '. 잠시 뒤 다시 해 주세요.');
+  });
+}
+function albReadFileDataUrl(file, cb){
+  var fr = new FileReader();
+  fr.onload = function(){ cb(String(fr.result || '')); };
+  fr.onerror = function(){ cb(''); };
+  try { fr.readAsDataURL(file); } catch (e){ cb(''); }
+}
+function albDeleteVideo(it){
+  if (!it || !it.videoId) return;
+  try { fetch(albDbUrl() + '/' + albVideoBase() + '/' + it.videoId + '.json', { method: 'DELETE' }).then(null, function(){}); } catch (e){}
+}
+function albDataUrlToBlob(d){
+  var i = String(d).indexOf(',');
+  var meta = String(d).slice(0, i);
+  var b64 = String(d).slice(i + 1);
+  var mime = (meta.match(/:(.*?);/) || [])[1] || 'video/mp4';
+  var bin = atob(b64);
+  var len = bin.length, u8 = new Uint8Array(len);
+  for (var k = 0; k < len; k++) u8[k] = bin.charCodeAt(k);
+  return new Blob([u8], { type: mime });
+}
+function albMountVideo(box, it){
+  if (!box || !it.videoId) return;
+  fetch(albDbUrl() + '/' + albVideoBase() + '/' + it.videoId + '.json', { cache: 'no-store' }).then(function(r){
+    if (!r.ok) throw new Error('HTTP ' + r.status);
+    return r.json();
+  }).then(function(j){
+    if (!j || !j.data) throw new Error('empty');
+    var url = '';
+    try {
+      albBlobUrl = URL.createObjectURL(albDataUrlToBlob(j.data));
+      url = albBlobUrl;
+    } catch (e){ url = j.data; }
+    box.innerHTML = '<video class="alb-video" controls playsinline autoplay preload="metadata" src="' + url + '"></video>';
+  }).then(null, function(){
+    box.innerHTML = '<div class="alb-vload">🎬 영상을 불러오지 못했어요. 잠시 뒤 다시 열어 주세요.</div>';
+  });
+}
+
+/* ---------------- 보기용 화면 ---------------- */
+function albFilterChips(){
+  var list = albList();
+  var filter = state.ui.albumFilter || 'all';
+  var counts = { all: list.length, val: 0 };
+  list.forEach(function(it){
+    counts[it.who] = (counts[it.who] || 0) + 1;
+    if (it.kind === 'valorant') counts.val++;
+  });
+  var defs = [{ k:'all', nm:'전체' }, { k:'dad' }, { k:'mom' }, { k:'taeju' }, { k:'juwon' }, { k:'val', nm:'발로란트' }];
+  return defs.map(function(c){
+    var nm = c.nm || person(c.k).name;
+    return '<button class="alb-chip' + (filter === c.k ? ' on' : '') + '" data-act="alb-filter" data-id="' + c.k + '">' +
+      esc(nm) + ' <b>' + (counts[c.k] || 0) + '</b></button>';
+  }).join('');
+}
+function albShown(){
+  var filter = state.ui.albumFilter || 'all';
+  return albList().filter(function(it){
+    if (filter === 'all') return true;
+    if (filter === 'val') return it.kind === 'valorant';
+    return it.who === filter;
+  });
+}
+function albCardHTML(it){
+  var th = albThumb(it);
+  var badge = albBadge(it);
+  return '<button class="alb-card" data-act="alb-view" data-id="' + esc(it.id) + '" aria-label="' + esc(it.title || '추억') + ' 크게 보기">' +
+    '<span class="alb-thumb">' +
+      (th ? '<img src="' + esc(th) + '" alt="" loading="lazy" referrerpolicy="no-referrer">' : '<span class="ph">' + (badge ? '🎬' : '📸') + '</span>') +
+      (badge ? '<span class="alb-badge">' + esc(badge) + '</span>' : '') +
+      (it.kind === 'valorant' ? '<span class="alb-tag">🎮</span>' : '') +
+    '</span>' +
+    '<span class="alb-body">' +
+      '<span class="alb-who">' + esc(person(it.who).name) + '</span>' +
+      '<span class="alb-t">' + esc(it.title || (badge ? '영상 기록' : '사진 기록')) + '</span>' +
+      (it.memo ? '<span class="alb-m">' + esc(it.memo) + '</span>' : '') +
+      '<span class="alb-d">' + esc(albUploadLine(it)) + '</span>' +
+    '</span>' +
+  '</button>';
+}
+function albEmptyHTML(){
+  var list = albList();
+  var filter = state.ui.albumFilter || 'all';
+  if (!list.length){
+    return '<div class="alb-empty">📸 아직 추억이 없어요<br>가족 사진도, 발로란트 잘한 순간도 좋아요<br><button class="btn btn--sm btn--pink" data-act="alb-add" style="margin-top:9px">＋ 첫 추억 올리기</button></div>';
+  }
+  var nm = filter === 'val' ? '발로란트' : (BY_ID[filter] ? person(filter).name : '이');
+  return '<div class="alb-empty">' + esc(nm) + ' 기록이 아직 없어요</div>';
+}
+/* 사진첩 탭(전체 화면) */
+function renderAlbum(){ return renderAlbumPage(); }
+function renderAlbumPage(){
+  var shown = albShown();
+  return '<div class="card card--peach">' +
+      '<div class="card-hd">' +
+        '<div class="card-title">📸 우리 가족 사진첩</div>' +
+        '<button class="btn btn--sm btn--pink" data-act="alb-add">＋ 사진·영상</button>' +
+      '</div>' +
+      '<div class="card-desc" style="margin:0 0 8px">가족 사진도, 발로란트 잘한 순간(스크린샷·짧은 영상·유튜브 링크)도 여기에 모아요. 카드마다 누가 언제 올렸는지 남아요.</div>' +
+      '<div class="alb-chips">' + albFilterChips() + '</div>' +
+      (shown.length ? '<div class="alb-grid">' + shown.map(albCardHTML).join('') + '</div>' : albEmptyHTML()) +
+      '<div class="foot-note" style="padding:10px 0 0">사진은 긴 변 1080px·JPEG로 자동 압축 · 영상 파일은 사진첩과 따로 보관해 필요할 때만 내려받아요</div>' +
+    '</div>';
+}
+/* 취미 탭의 짧은 바로가기 */
+function renderAlbumShortcut(){
+  var list = albList();
+  var last = list[0] || null;
+  var valCount = list.filter(function(it){ return it.kind === 'valorant'; }).length;
+  var th = last ? albThumb(last) : '';
+  return '<div class="card card--peach">' +
+      '<div class="card-hd">' +
+        '<div class="card-title">📸 사진첩</div>' +
+        '<div class="mini-pill">' + list.length + '개 · 발로란트 ' + valCount + '</div>' +
+      '</div>' +
+      '<div class="card-desc" style="margin:0 0 9px">잘한 판 스크린샷·짧은 클립은 사진첩 탭에 모여 있어요. 가족 사진도 같은 곳에 남겨요.</div>' +
+      (last
+        ? '<button class="alb-short" data-act="alb-view" data-id="' + esc(last.id) + '">' +
+            '<span class="alb-short-th">' + (th ? '<img src="' + esc(th) + '" alt="" loading="lazy" referrerpolicy="no-referrer">' : '<span class="ph">' + (albBadge(last) ? '🎬' : '📸') + '</span>') + '</span>' +
+            '<span class="alb-short-body">' +
+              '<span class="alb-t">' + esc(last.title || '최근 기록') + '</span>' +
+              '<span class="alb-d">' + esc(albUploadLine(last)) + '</span>' +
+            '</span>' +
+          '</button>'
+        : '') +
+      '<div class="row" style="gap:7px;margin-top:9px;flex-wrap:wrap">' +
+        '<button class="btn btn--sm btn--ghost grow" data-act="alb-open">사진첩에서 하이라이트 보기 →</button>' +
+        '<button class="btn btn--sm btn--pink" data-act="alb-add-val">＋ 발로란트 올리기</button>' +
+      '</div>' +
+    '</div>';
+}
+
+/* ---------------- 올리기 화면 ---------------- */
+function albWhoDefault(){
+  if (state.ui.albumKind === 'valorant'){
+    var acc = valCurAccount();
+    var hit = '';
+    if (acc && acc.label){
+      ALB_WHO.forEach(function(id){ if (person(id).name === acc.label || person(id).full === acc.label) hit = id; });
+    }
+    if (hit) return hit;
+  }
+  if (BY_ID[state.ui.albumWho]) return state.ui.albumWho;
+  return albByDefault();
+}
+function albByDefault(){
+  if (BY_ID[state.ui.albumBy]) return state.ui.albumBy;
+  return 'dad';
+}
+function openAlbumAdd(){
+  if (albList().length >= ALB_MAX){ toast('사진첩이 가득 찼어요(' + ALB_MAX + '개). 오래된 기록을 지운 뒤 올려 주세요'); return; }
+  albDraft = { img:'', bytes:0, w:0, h:0, busy:false, file:null, thumb:'', dur:0, vbytes:0 };
+  var who = albWhoDefault();
+  var by = albByDefault();
+  var kind = state.ui.albumKind === 'valorant' ? 'valorant' : 'family';
+  var opts = ALB_WHO.map(function(id){
+    return '<option value="' + id + '"' + (id === who ? ' selected' : '') + '>' + esc(person(id).name) + '</option>';
+  }).join('');
+  var byOpts = ALB_WHO.map(function(id){
+    return '<option value="' + id + '"' + (id === by ? ' selected' : '') + '>' + esc(person(id).name) + '</option>';
+  }).join('');
+  openModal(
+    '<div class="sheet-hd"><div class="sheet-title">📸 추억 올리기</div>' +
+    '<button class="sheet-close" data-act="modal-close" aria-label="닫기">✕</button></div>' +
+    '<div class="form-row"><label>종류</label><select class="field grow" id="albKind">' +
+      '<option value="family"' + (kind === 'family' ? ' selected' : '') + '>가족 추억</option>' +
+      '<option value="valorant"' + (kind === 'valorant' ? ' selected' : '') + '>발로란트 기록</option></select></div>' +
+    '<div class="form-row"><label>누구</label><select class="field grow" id="albWho">' + opts + '</select></div>' +
+    '<div class="form-row"><label>올림</label><select class="field grow" id="albBy">' + byOpts + '</select></div>' +
+    '<div class="tiny" style="margin:-2px 0 9px">누구 = 기록의 주인공 · 올림 = 실제로 올린 사람 (카드에 올린 시각과 함께 남아요)</div>' +
+    '<div class="form-row"><label>제목</label><input class="field grow" id="albTitle" maxlength="40" placeholder="예: 태주 첫 에이스!"></div>' +
+    '<div class="form-row" style="align-items:flex-start"><label style="padding-top:9px">메모</label>' +
+      '<textarea class="field field--area grow" id="albMemo" maxlength="200" rows="2" placeholder="어떤 판이었는지 적어 두세요 (선택)"></textarea></div>' +
+    '<div class="alb-pick">' +
+      '<div class="alb-prev" id="albPrev">📷</div>' +
+      '<div class="alb-side">' +
+        '<label class="btn btn--sm btn--sun" for="albFile">🖼 사진 고르기</label>' +
+        '<input type="file" id="albFile" accept="image/*" style="display:none">' +
+        '<div class="tiny" id="albFileInfo" style="margin-top:6px;line-height:1.45">폰 사진첩에서 고르면 자동으로 줄여서 저장해요</div>' +
+      '</div>' +
+    '</div>' +
+    '<div class="alb-pick">' +
+      '<div class="alb-prev" id="albVidPrev">🎬</div>' +
+      '<div class="alb-side">' +
+        '<label class="btn btn--sm btn--mint" for="albVideoFile">🎬 영상 파일 고르기</label>' +
+        '<input type="file" id="albVideoFile" accept="video/*" style="display:none">' +
+        '<div class="tiny" id="albVidInfo" style="margin-top:6px;line-height:1.45">7MB 이하 짧은 클립은 첫 장면만 남기고 영상은 따로 보관해요</div>' +
+        '<button class="btn btn--sm btn--ghost" id="albVidClear" data-act="alb-vid-clear" style="margin-top:6px;display:none">✕ 영상 빼기</button>' +
+      '</div>' +
+    '</div>' +
+    '<div class="form-row"><label>링크</label><input class="field grow" id="albVid" inputmode="url" maxlength="300" placeholder="유튜브·드라이브 링크 (선택)"></div>' +
+    '<div class="tiny" style="margin:0 0 10px;line-height:1.5">유튜브 링크는 카드에서 바로 재생되고, 그 밖의 링크는 🎬 영상 보기로 새 창에서 열려요. 사진·영상 없이 제목과 메모만 남겨도 돼요.</div>' +
+    '<div class="sheet-actions">' +
+      '<button class="btn btn--ghost" data-act="modal-close">취소</button>' +
+      '<button class="btn btn--pink" data-act="alb-save" id="albSaveBtn">올리기</button>' +
+    '</div>',
+    function(root){
+      var pi = root.querySelector('#albFile');
+      if (pi) pi.addEventListener('change', function(){ albPickFile(pi); });
+      var vi = root.querySelector('#albVideoFile');
+      if (vi) vi.addEventListener('change', function(){ albPickVideo(vi); });
+    }
+  );
+}
+function albSaveBtnState(on, label){
+  var btn = document.getElementById('albSaveBtn');
+  if (!btn) return;
+  btn.disabled = !!on;
+  btn.textContent = label || (on ? '올리는 중…' : '올리기');
+}
+function saveAlbum(){
+  if (albDraft.busy){ toast('사진·영상 준비 중이에요. 조금만 기다려 주세요'); return; }
+  if (albList().length >= ALB_MAX){ closeModal(); toast('사진첩이 가득 찼어요(' + ALB_MAX + '개)'); return; }
+  var kindEl = document.getElementById('albKind');
+  var whoEl = document.getElementById('albWho');
+  var byEl = document.getElementById('albBy');
+  var tEl = document.getElementById('albTitle');
+  var mEl = document.getElementById('albMemo');
+  var vEl = document.getElementById('albVid');
+  var who = (whoEl && BY_ID[whoEl.value]) ? whoEl.value : 'dad';
+  var by = (byEl && BY_ID[byEl.value]) ? byEl.value : albByDefault();
+  var kind = (kindEl && kindEl.value === 'valorant') ? 'valorant' : 'family';
+  var title = String(tEl ? tEl.value : '').replace(/\s+/g, ' ').trim().slice(0, 40);
+  var memo = String(mEl ? mEl.value : '').replace(/\r/g, '').replace(/[ \t]+/g, ' ').trim().slice(0, 200);
+  var vid = String(vEl ? vEl.value : '').replace(/\s+/g, '').slice(0, 300);
+  var file = albDraft.file;
+  if (vid && !albUrlOk(vid)){ toast('링크는 http:// 또는 https:// 로 시작해야 해요'); return; }
+  if (!title && !albDraft.img && !vid && !file){ toast('제목이나 사진·영상 중 하나는 있어야 해요'); return; }
+  var now = Date.now();
+  var item = {
+    id: 'alb' + uid(),
+    who: who,
+    by: by,
+    kind: kind,
+    title: title || (albDraft.img ? '추억 사진' : '추억 영상'),
+    memo: memo,
+    img: albDraft.img || '',
+    vid: vid,
+    date: ymd(new Date(now)),
+    at: now,
+    type: (file || vid) ? 'video' : 'photo'
+  };
+  if (!file){ albCommit(item, who); return; }
+  /* 영상 파일: 썸네일은 기록에, 영상 본체는 videos/에 따로 */
+  var videoId = 'v' + uid();
+  albDraft.busy = true;
+  albSaveBtnState(true, '영상 올리는 중…');
+  albReadFileDataUrl(file, function(dataUrl){
+    if (!dataUrl){
+      albDraft.busy = false; albSaveBtnState(false);
+      toast('영상 파일을 읽지 못했어요');
+      return;
+    }
+    albStoreVideo(videoId, file, dataUrl, function(ok, err){
+      if (!ok){
+        albDraft.busy = false; albSaveBtnState(false);
+        toast(err || '영상을 올리지 못했어요');
+        return;
+      }
+      item.videoId = videoId;
+      item.videoMime = file.type || 'video/mp4';
+      item.size = numOf(file.size, 0);
+      item.dur = albDraft.dur || 0;
+      item.thumb = albDraft.thumb || '';
+      albDraft.busy = false;
+      albCommit(item, who);
+    });
+  });
+}
+function albCommit(item, who){
+  albList().unshift(item);
+  if (BY_ID[item.by]) state.ui.albumBy = item.by;
+  if (BY_ID[item.who]) state.ui.albumWho = item.who;
+  state.ui.albumKind = item.kind === 'valorant' ? 'valorant' : 'family';
+  albDraft = { img:'', bytes:0, w:0, h:0, busy:false, file:null, thumb:'', dur:0, vbytes:0 };
+  state.ui.albumFilter = item.kind === 'valorant' ? 'val' : 'all';
+  closeModal();
+  save(); render();
+  toast(person(who).name + ' 추억을 담았어요 · 가족 모두에게 보여요');
+}
+function openAlbumView(id){
+  var it = null;
+  albList().forEach(function(x){ if (x.id === id) it = x; });
+  if (!it) return;
+  var yt = albYtId(it.vid);
+  var media = '';
+  if (it.img) media += '<img class="alb-big" src="' + esc(it.img) + '" alt="">';
+  if (it.videoId){
+    media += '<div class="alb-vbox" id="albVBox"><div class="alb-vload">🎬 영상 불러오는 중…</div></div>' +
+      (it.size ? '<div class="tiny" style="margin-top:6px">영상 ' + albMb(it.size) + (it.dur ? ' · ' + it.dur + '초' : '') + ' · 사진첩과 따로 보관해요</div>' : '');
+  }
+  if (yt){
+    media += '<iframe class="alb-frame" style="margin-top:8px" src="https://www.youtube.com/embed/' + esc(yt) + '?rel=0" title="' + esc(it.title || '추억 영상') + '" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen loading="lazy"></iframe>' +
+      '<div class="row" style="margin-top:8px"><a class="btn btn--sm btn--ghost btn--block" href="https://www.youtube.com/watch?v=' + esc(yt) + '" target="_blank" rel="noopener noreferrer">▶ 유튜브에서 열기</a></div>';
+  } else if (it.vid){
+    media += '<div class="row" style="margin-top:8px"><a class="btn btn--sm btn--sky btn--block" href="' + esc(it.vid) + '" target="_blank" rel="noopener noreferrer">🎬 영상 보기</a></div>';
+  }
+  var by = albByOf(it);
+  openModal(
+    '<div class="sheet-hd"><div class="sheet-title">' + (it.type === 'video' ? '🎬' : '📸') + ' ' + esc(it.title || '추억') + '</div>' +
+    '<button class="sheet-close" data-act="modal-close" aria-label="닫기">✕</button></div>' +
+    '<div class="alb-meta">' + esc(person(it.who).name) + ' 기록 · ' + (by ? esc(person(by).name) + ' 올림' : '올린 사람 미기록') + ' · ' + esc(albFullTimeStr(it)) + '</div>' +
+    media +
+    (it.memo ? '<div class="card-desc" style="margin:10px 0 0;white-space:pre-wrap">' + esc(it.memo) + '</div>' : '') +
+    '<div class="sheet-actions" style="margin-top:12px">' +
+      '<button class="btn btn--ghost" data-act="modal-close">닫기</button>' +
+      '<button class="btn btn--pink" data-act="alb-del" data-id="' + esc(it.id) + '">🗑 지우기</button>' +
+    '</div>',
+    function(root){
+      var box = root.querySelector('#albVBox');
+      if (box) albMountVideo(box, it);
+      modalCleanup = function(){
+        if (albBlobUrl){ try { URL.revokeObjectURL(albBlobUrl); } catch (e){} albBlobUrl = ''; }
+      };
+    }
+  );
+}
+function deleteAlbum(id){
+  var it = null;
+  albList().forEach(function(x){ if (x.id === id) it = x; });
+  if (!it) return;
+  confirmModal('추억 지우기', '「' + esc(it.title || '추억') + '」 기록을 사진첩에서 지울까요? 되돌릴 수 없어요.', '지우기', function(){
+    albDeleteVideo(it);
+    state.valorant.album = albList().filter(function(x){ return x.id !== id; });
+    save(); render();
+    toast('사진첩에서 지웠어요');
+  }, true);
 }
 
 /* ============================ 일정 수정 ============================ */
@@ -4501,6 +5192,10 @@ function mergeLocalInto(next){
     next.giftHistory = ghOut;
   }
   if (goalCount() !== 30 && numOf(next.stampGoal, 30) === 30) next.stampGoal = goalCount();
+  /* 사진첩: 이 기기에만 있던 추억 기록도 잃지 않도록 합쳐요 */
+  if (isObj(next.valorant) && arrOf(state.valorant.album).length){
+    next.valorant.album = mergeById(next.valorant.album, state.valorant.album).sort(function(a, b){ return numOf(b.at, 0) - numOf(a.at, 0); }).slice(0, ALB_MAX);
+  }
   var d = today();
   if (state.meals[d] && next.meals[d]){
     MEAL_SLOTS.forEach(function(slot){
@@ -4741,7 +5436,7 @@ function fbOnRemote(val){
         });
       });
     });
-    next.valorant = { accounts: next.valorant.accounts, cur: next.valorant.cur, tiers: next.valorant.tiers, skins: mergedSkins };
+    next.valorant = { accounts: next.valorant.accounts, cur: next.valorant.cur, tiers: next.valorant.tiers, skins: mergedSkins, album: next.valorant.album };
     needPush = true;
   }
   var freshDefaults = null;
