@@ -442,6 +442,8 @@ select.field{padding:10px 8px;height:44px;background:#fff}
 .gp-box .p{font-size:10.5px;font-weight:800;color:#7FA892}
 .gp-chart{background:#fff;border-radius:16px;border:1.5px solid #DCEDE3;padding:8px 6px 4px;margin-bottom:8px}
 .gp-chart svg{width:100%;height:auto;display:block}
+.gp-cap{display:flex;justify-content:space-between;gap:6px;font-size:9.5px;color:#A6B9AC;padding:0 2px 4px;font-weight:800}
+.gp-cap .mid{color:#7FA892}
 .gp-row{display:flex;align-items:center;gap:8px;padding:8px 0;border-bottom:1px dashed #E8F1EB;font-size:13px}
 .gp-row:last-child{border-bottom:0}
 .gp-date{flex:0 0 60px;font-size:11px;font-weight:900;color:#7FA892;line-height:1.3}
@@ -978,6 +980,7 @@ function defaultState(){
     /* 발로란트: 계정·티어·보유 스킨 */
     valorant: {
       accounts: [
+        { id:'va0', name:'taeyomi1029', tag:'1029', region:'kr', label:'태주' },
         { id:'va1', name:'juyomi0729', tag:'0729', region:'kr', label:'주원' },
         { id:'va2', name:'배그골드40대아빠의발로란트도전', tag:'1024', region:'kr', label:'아빠' },
         { id:'va3', name:'hoyomi1024', tag:'1024', region:'kr', label:'아빠2' }
@@ -3812,7 +3815,7 @@ function growthChartSVG(kid, metric){
     if (v > 0) pts.push({ date: g.date, v: v });
   });
   if (pts.length < 2) return '';
-  var W = 320, H = 118, padX = 26, padTop = 20, padBot = 22;
+  var W = 320, H = 106, padX = 12, padTop = 12, padBot = 12;
   var vs = pts.map(function(p){ return p.v; });
   var lo = Math.min.apply(null, vs), hi = Math.max.apply(null, vs);
   if (hi - lo < 1){ hi = Math.max(hi, lo + 1); lo = Math.max(0, lo - 1); }
@@ -3826,14 +3829,13 @@ function growthChartSVG(kid, metric){
     return '<circle cx="' + xAt(i).toFixed(1) + '" cy="' + yAt(p.v).toFixed(1) + '" r="3.3" fill="#5CBD84" stroke="#fff" stroke-width="1.4"/>';
   }).join('');
   var first = pts[0].date, lastD = pts[pts.length - 1].date;
-  return '<svg viewBox="0 0 ' + W + ' ' + H + '" role="img" aria-label="성장 추이 그래프">' +
+  var cap = '<div class="gp-cap"><span>' + esc(first.slice(2, 4)) + '.' + esc(first.slice(5, 7)) + '.' + esc(first.slice(8, 10)) + '</span>' +
+    '<span class="mid">' + pts[0].v.toFixed(1) + ' → ' + pts[pts.length - 1].v.toFixed(1) + unit + ' (' + pts.length + '회)</span>' +
+    '<span>' + esc(lastD.slice(2, 4)) + '.' + esc(lastD.slice(5, 7)) + '.' + esc(lastD.slice(8, 10)) + '</span></div>';
+  return cap + '<svg viewBox="0 0 ' + W + ' ' + H + '" role="img" aria-label="성장 추이 그래프">' +
     '<path d="' + area + '" fill="rgba(92,189,132,.12)"/>' +
     '<path d="' + d + '" fill="none" stroke="#5CBD84" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/>' +
     dots +
-    '<text x="2" y="12" font-size="9" fill="#9FB3A6">' + hi.toFixed(1) + unit + '</text>' +
-    '<text x="2" y="' + (H - 8) + '" font-size="9" fill="#9FB3A6">' + lo.toFixed(1) + unit + '</text>' +
-    '<text x="' + padX + '" y="' + (H - 6) + '" font-size="9" fill="#B5A18C">' + esc(first.slice(5)) + '</text>' +
-    '<text x="' + (W - padX) + '" y="' + (H - 6) + '" font-size="9" fill="#B5A18C" text-anchor="end">' + esc(lastD.slice(5)) + '</text>' +
   '</svg>';
 }
 function growthCardHTML(){
@@ -3845,12 +3847,12 @@ function growthCardHTML(){
   var metric = state.ui.growthMetric || 'h';
 
   var birthRow = birth
-    ? '<div class="gp-birth"><span class="t">🎂 ' + esc(birth.slice(0, 4)) + '년 ' + esc(birth.slice(5, 7)) + '월' + (birth.length > 7 ? ' ' + esc(birth.slice(8, 10)) + '일' : '') + '생</span>' +
-        '<span class="tiny">' + (function(){
+    ? '<div class="gp-birth"><span class="t">🎂 ' + esc(birth.slice(0, 4)) + '.' + esc(birth.slice(5, 7)) + (birth.length > 7 ? '.' + esc(birth.slice(8, 10)) : '') + '생' +
+        (function(){
           var mm = ageMonthsAt(birth, today());
-          return mm === null ? '또래 100명과 비교해요' : '만 ' + Math.floor(mm / 12) + '세 ' + (mm % 12) + '개월 · 또래 100명과 비교해요';
+          return mm === null ? '' : ' · 만 ' + Math.floor(mm / 12) + '세 ' + (mm % 12) + '개월';
         })() + '</span>' +
-        '<button class="btn btn--sm btn--ghost" data-act="birth-edit" data-id="' + kid + '">바꾸기</button></div>'
+        '<button class="btn btn--sm btn--ghost" style="margin-left:auto" data-act="birth-edit" data-id="' + kid + '">바꾸기</button></div>'
     : '<div class="gp-birth"><span class="t">🎂 생년월</span>' +
         '<input class="field field--sm" type="month" id="birthInput" value="" aria-label="생년월">' +
         '<button class="btn btn--sm btn--mint" data-act="birth-save" data-id="' + kid + '">저장</button></div>' +
