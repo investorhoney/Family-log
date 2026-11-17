@@ -434,12 +434,29 @@ select.field{padding:10px 8px;height:44px;background:#fff}
 .lunch-toggle button{border:1.5px solid #D6E6F5;background:#fff;border-radius:999px;padding:5px 10px;font-size:11.5px;font-weight:800;color:#7E96AC;cursor:pointer;white-space:nowrap}
 .lunch-toggle button.on{background:#DCEBFA;border-color:#9CC3E6;color:#3D6A94}
 
-/* ---------- 성장 기록 ---------- */
-.gp-sum{display:flex;gap:6px;margin:2px 0 8px;flex-wrap:wrap}
-.gp-box{flex:1 1 84px;background:#fff;border-radius:14px;padding:8px 6px;border:1.5px solid #DCEDE3;text-align:center;min-width:0}
-.gp-box .k{font-size:10.5px;font-weight:800;color:#8B7460}
-.gp-box .v{font-size:16px;font-weight:900;color:#3E8A66;line-height:1.2;white-space:nowrap}
-.gp-box .p{font-size:10.5px;font-weight:800;color:#7FA892}
+/* ---------- 성장 기록 (태주·주원 따로 보기) ---------- */
+.gp-cmp{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin:0 0 12px}
+.gp-cmp-k{background:#fff;border:1.5px solid #DCEDE3;border-radius:16px;padding:8px 9px 7px;min-width:0}
+.gp-cmp-k--taeju{border-color:#F0DFC6;background:linear-gradient(180deg,#FFFDF7,#FFF6E7)}
+.gp-cmp-k--juwon{border-color:#EFE7BE;background:linear-gradient(180deg,#FFFEF6,#FFFAE1)}
+.gp-cmp-h{display:flex;align-items:center;gap:5px;margin-bottom:5px;min-width:0}
+.gp-cmp-h .nm{font-size:12.5px;font-weight:900;color:#7A6450;white-space:nowrap;min-width:0;overflow:hidden;text-overflow:ellipsis}
+.gp-cmp-h .dt{margin-left:auto;font-size:9.5px;font-weight:800;color:#A9B3A0;white-space:nowrap}
+.gp-cmp-l{display:flex;align-items:baseline;gap:4px;flex-wrap:wrap;padding:2.5px 0;border-bottom:1px dashed #EDE6DA;min-width:0}
+.gp-cmp-l:last-child{border-bottom:0}
+.gp-cmp-l b{flex:0 0 34px;font-size:10px;font-weight:900;color:#A79C8B}
+.gp-cmp-l .v{font-size:12.5px;font-weight:900;color:#4E6B58;white-space:nowrap}
+.gp-cmp-l .p{margin-left:auto;font-size:10px;font-weight:900;color:#7FA892;white-space:nowrap}
+.gp-pair{display:grid;grid-template-columns:1fr;gap:10px}
+.gp-kid{background:#fff;border:1.5px solid #DCEDE3;border-radius:18px;padding:10px;min-width:0}
+.gp-kid--taeju{border-color:#F0DFC6;background:linear-gradient(180deg,#FFFDF8,#FFF8EC)}
+.gp-kid--juwon{border-color:#EFE7BE;background:linear-gradient(180deg,#FFFEF7,#FFFAE4)}
+.gp-khd{display:flex;align-items:center;gap:8px;margin-bottom:8px;min-width:0}
+.gp-knm{font-size:14.5px;font-weight:900;letter-spacing:-.2px;line-height:1.25;color:#5A4636;display:flex;align-items:center;gap:5px;min-width:0;flex-wrap:wrap}
+.gp-knm .c{font-size:10px;font-weight:800;color:#A99C8A;background:#fff;border-radius:999px;padding:1px 7px;white-space:nowrap}
+.gp-brth{display:inline-flex;align-items:center;gap:3px;max-width:100%;margin-top:3px;border:1.5px dashed #E6D6BE;background:rgba(255,255,255,.82);border-radius:999px;padding:2px 8px;font-size:10.5px;font-weight:800;color:#A0886C;cursor:pointer;white-space:nowrap;overflow:hidden}
+.gp-empty{border:1.5px dashed #E8D9C4;border-radius:14px;padding:13px 10px;text-align:center;font-size:12px;color:#B5A18C;line-height:1.6;background:rgba(255,255,255,.65)}
+.gp-hint{font-size:10.5px;font-weight:800;color:#A6B9AC;text-align:center;padding:2px 0 6px;line-height:1.5}
 .gp-chart{background:#fff;border-radius:16px;border:1.5px solid #DCEDE3;padding:8px 6px 4px;margin-bottom:8px}
 .gp-chart svg{width:100%;height:auto;display:block}
 .gp-cap{display:flex;justify-content:space-between;gap:6px;font-size:9.5px;color:#A6B9AC;padding:0 2px 4px;font-weight:800}
@@ -453,9 +470,10 @@ select.field{padding:10px 8px;height:44px;background:#fff}
 .gp-tabs{display:flex;gap:5px;margin-bottom:8px;flex-wrap:wrap}
 .gp-tab{border:1.5px solid #DCEDE3;background:#fff;border-radius:999px;padding:5px 11px;font-size:11.5px;font-weight:800;color:#7FA892;cursor:pointer}
 .gp-tab.on{background:#E6F7EE;border-color:#A9DCBF;color:#31795A}
-.gp-birth{display:flex;gap:6px;align-items:center;flex-wrap:wrap;background:#fff;border:1.5px dashed #D9EBE0;border-radius:14px;padding:8px 10px;margin-bottom:9px}
-.gp-birth .t{font-size:11.5px;font-weight:800;color:#7FA892;flex:0 0 auto}
-.gp-birth input{flex:1 1 110px;min-width:0}
+@media (min-width:760px){
+  .gp-pair{grid-template-columns:1fr 1fr;gap:14px;align-items:start}
+  .gp-section{width:min(920px,calc(100vw - 64px));margin-left:calc(50% - min(460px,(100vw - 64px)/2));margin-right:0}
+}
 
 /* ---------- 발로란트 ---------- */
 .val-accs{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:10px;align-items:center}
@@ -1046,7 +1064,7 @@ function defaultState(){
       /* 📸 추억 사진첩: 사진(자동 압축)·영상 링크·메모를 모아 둬요 */
       album: []
     },
-    ui: { tab:'home', kid:'taeju', growthMetric:'h', lunchView:'today', albumFilter:'all', albumBy:'', albumKind:'family', albumWho:'' }
+    ui: { tab:'home', kid:'taeju', growthMetric:'h', gm:{ taeju:'h', juwon:'h' }, lunchView:'today', albumFilter:'all', albumBy:'', albumKind:'family', albumWho:'' }
   };
 }
 
@@ -1371,6 +1389,13 @@ function normalize(raw){
     s.ui.praiseFrom = BY_ID[raw.ui.praiseFrom] ? raw.ui.praiseFrom : 'dad';
     s.ui.praiseTo = BY_ID[raw.ui.praiseTo] ? raw.ui.praiseTo : 'taeju';
     s.ui.growthMetric = (raw.ui.growthMetric === 'b' || raw.ui.growthMetric === 'w') ? raw.ui.growthMetric : 'h';
+    /* 성장 그래프 지표는 아이마다 따로 기억해요 (없으면 위 기본값을 따라요) */
+    var gmRaw = isObj(raw.ui.gm) ? raw.ui.gm : {};
+    s.ui.gm = {};
+    KIDS.forEach(function(kid){
+      var mv = gmRaw[kid];
+      s.ui.gm[kid] = (mv === 'w' || mv === 'b') ? mv : (mv === 'h' ? 'h' : s.ui.growthMetric);
+    });
     s.ui.lunchView = raw.ui.lunchView === 'week' ? 'week' : 'today';
     s.ui.albumFilter = BY_ID[raw.ui.albumFilter] ? raw.ui.albumFilter : 'all';
     s.ui.albumBy = BY_ID[raw.ui.albumBy] ? raw.ui.albumBy : '';
@@ -3370,10 +3395,17 @@ var ACTIONS = {
   },
   'lunch-refresh': function(){ loadLunch(true); },
 
-  'growth-add': function(){ openGrowthAdd(); },
+  'growth-add': function(el){ openGrowthAdd(el.dataset.kid); },
   'growth-save': function(el){ saveGrowth(el.dataset.id); },
-  'growth-del': function(el){ deleteGrowth(el.dataset.id); },
-  'growth-metric': function(el){ state.ui.growthMetric = el.dataset.id; save(); render(); },
+  'growth-del': function(el){ deleteGrowth(el.dataset.kid, el.dataset.id); },
+  'growth-metric': function(el){
+    var kid = el.dataset.kid;
+    if (KIDS.indexOf(kid) < 0) return;
+    var m = el.dataset.id;
+    if (!state.ui.gm) state.ui.gm = { taeju:'h', juwon:'h' };
+    state.ui.gm[kid] = (m === 'w' || m === 'b') ? m : 'h';
+    save(); render();
+  },
   'birth-save': function(el){ saveBirth(el.dataset.id); },
   'birth-edit': function(el){ editBirth(el.dataset.id); },
 
@@ -3935,42 +3967,80 @@ function growthChartSVG(kid, metric){
     dots +
   '</svg>';
 }
-function growthCardHTML(){
-  var kid = state.ui.kid, p = person(kid);
+function growthMetricOf(kid){
+  var gm = (state.ui && state.ui.gm) || {};
+  var v = gm[kid];
+  return (v === 'w' || v === 'b') ? v : 'h';
+}
+function shortYmd(d){
+  var s = String(d || '');
+  if (s.length < 10) return '';
+  return esc(s.slice(2, 4)) + '.' + esc(s.slice(5, 7)) + '.' + esc(s.slice(8, 10));
+}
+function growthAgeText(kid){
+  var birth = state.births[kid];
+  if (!birth) return '';
+  var out = birth.slice(0, 4) + '.' + birth.slice(5, 7) + (birth.length > 7 ? '.' + birth.slice(8, 10) : '') + '생';
+  var mm = ageMonthsAt(birth, today());
+  if (mm !== null) out += ' · 만 ' + Math.floor(mm / 12) + '세' + (mm % 12 ? ' ' + (mm % 12) + '개월' : '');
+  return out;
+}
+function growthLastOf(kid){
   var list = state.growth[kid] || [];
+  return list.length ? list[list.length - 1] : null;
+}
+/* 태주·주원 최근 수치를 나란히 놓은 비교 요약 */
+function growthCompareHTML(){
+  var cols = KIDS.map(function(kid){
+    var p = person(kid);
+    var last = growthLastOf(kid);
+    var st = last ? growthStats(kid, last) : null;
+    var rows = [
+      { k:'키', v: (last && last.height ? last.height + 'cm' : '—'), p: (st && st.h !== null ? fmtPct(st.h) : '') },
+      { k:'몸무게', v: (last && last.weight ? last.weight + 'kg' : '—'), p: (st && st.w !== null ? fmtPct(st.w) : '') },
+      { k:'BMI', v: (st && st.bmi ? String(st.bmi) : '—'), p: (st && st.b !== null ? fmtPct(st.b) : '') }
+    ];
+    return '<div class="gp-cmp-k gp-cmp-k--' + kid + '">' +
+      '<div class="gp-cmp-h"><span>' + (kid === 'taeju' ? '🐻' : '🐤') + '</span><span class="nm">' + esc(p.name) + '</span>' +
+        '<span class="dt">' + (last ? shortYmd(last.date) + ' 기준' : '기록 전') + '</span></div>' +
+      rows.map(function(r){
+        return '<div class="gp-cmp-l"><b>' + r.k + '</b><span class="v">' + r.v + '</span>' +
+          (r.p ? '<span class="p">' + r.p + '</span>' : '') + '</div>';
+      }).join('') +
+    '</div>';
+  }).join('');
+  return '<div class="gp-cmp" role="group" aria-label="태주·주원 성장 기록 비교">' + cols + '</div>';
+}
+/* 아이 한 명의 기록 카드: 생년월·그래프·기록 목록·추가/삭제 */
+function growthKidHTML(kid){
+  var p = person(kid);
+  var list = (state.growth[kid] || []).slice().sort(function(a, b){ return a.date < b.date ? -1 : a.date > b.date ? 1 : 0; });
+  var metric = growthMetricOf(kid);
   var birth = state.births[kid];
   var last = list.length ? list[list.length - 1] : null;
-  var st = last ? growthStats(kid, last) : null;
-  var metric = state.ui.growthMetric || 'h';
 
-  var birthRow = birth
-    ? '<div class="gp-birth"><span class="t">🎂 ' + esc(birth.slice(0, 4)) + '.' + esc(birth.slice(5, 7)) + (birth.length > 7 ? '.' + esc(birth.slice(8, 10)) : '') + '생' +
-        (function(){
-          var mm = ageMonthsAt(birth, today());
-          return mm === null ? '' : ' · 만 ' + Math.floor(mm / 12) + '세 ' + (mm % 12) + '개월';
-        })() + '</span>' +
-        '<button class="btn btn--sm btn--ghost" style="margin-left:auto" data-act="birth-edit" data-id="' + kid + '">바꾸기</button></div>'
-    : '<div class="gp-birth"><span class="t">🎂 생년월</span>' +
-        '<input class="field field--sm" type="month" id="birthInput" value="" aria-label="생년월">' +
-        '<button class="btn btn--sm btn--mint" data-act="birth-save" data-id="' + kid + '">저장</button></div>' +
-      '<div class="tiny" style="margin:-4px 0 9px">생년월을 넣으면 키·몸무게·BMI 백분위(또래 100명 중 순위)를 계산해요.</div>';
-
-  var sum = '';
-  if (last){
-    sum = '<div class="gp-sum">' +
-      '<div class="gp-box"><div class="k">키</div><div class="v">' + (last.height ? last.height + 'cm' : '-') + '</div><div class="p">' + (st.h !== null ? fmtPct(st.h) : '—') + '</div></div>' +
-      '<div class="gp-box"><div class="k">몸무게</div><div class="v">' + (last.weight ? last.weight + 'kg' : '-') + '</div><div class="p">' + (st.w !== null ? fmtPct(st.w) : '—') + '</div></div>' +
-      '<div class="gp-box"><div class="k">BMI</div><div class="v">' + (st.bmi ? st.bmi : '-') + '</div><div class="p">' + (st.b !== null ? fmtPct(st.b) + ' · ' + bmiLabel(st.b) : '—') + '</div></div>' +
+  var head = '<div class="gp-khd">' +
+      '<div class="fam-av fam-av--sm" style="background:' + p.tint + '">' + avatarSVG(p.kind, 30) + '</div>' +
+      '<div class="grow" style="min-width:0">' +
+        '<div class="gp-knm">' + esc(p.name) + '<span class="c">' + list.length + '개 기록' +
+          (last ? ' · 최근 ' + shortYmd(last.date) : '') + '</span></div>' +
+        '<button class="gp-brth" data-act="birth-edit" data-id="' + kid + '" aria-label="' + esc(p.name) + ' 생년월 바꾸기">🎂 ' +
+          (birth ? esc(growthAgeText(kid)) : '생년월 넣기') + ' ✎</button>' +
+      '</div>' +
     '</div>';
-  }
 
-  var chart = list.length >= 2
-    ? '<div class="gp-tabs">' +
-        '<button class="gp-tab' + (metric === 'h' ? ' on' : '') + '" data-act="growth-metric" data-id="h">키</button>' +
-        '<button class="gp-tab' + (metric === 'w' ? ' on' : '') + '" data-act="growth-metric" data-id="w">몸무게</button>' +
-        '<button class="gp-tab' + (metric === 'b' ? ' on' : '') + '" data-act="growth-metric" data-id="b">BMI</button>' +
-      '</div><div class="gp-chart">' + growthChartSVG(kid, metric) + '</div>'
-    : '';
+  var addBtn = '<button class="btn btn--sm btn--mint btn--block" style="margin-bottom:9px" data-act="growth-add" data-kid="' + kid + '" aria-label="' + esc(p.name) + ' 성장 기록 추가">＋ ' + esc(p.name) + ' 키·몸무게 기록 추가</button>';
+
+  var chart = '';
+  if (list.length >= 2){
+    chart = '<div class="gp-tabs">' +
+        '<button class="gp-tab' + (metric === 'h' ? ' on' : '') + '" data-act="growth-metric" data-kid="' + kid + '" data-id="h">키</button>' +
+        '<button class="gp-tab' + (metric === 'w' ? ' on' : '') + '" data-act="growth-metric" data-kid="' + kid + '" data-id="w">몸무게</button>' +
+        '<button class="gp-tab' + (metric === 'b' ? ' on' : '') + '" data-act="growth-metric" data-kid="' + kid + '" data-id="b">BMI</button>' +
+      '</div><div class="gp-chart">' + growthChartSVG(kid, metric) + '</div>';
+  } else if (list.length === 1){
+    chart = '<div class="gp-hint">기록이 하나 더 쌓이면 키·몸무게 그래프로 이어 볼 수 있어요</div>';
+  }
 
   var rows = list.length ? list.slice().reverse().map(function(g){
     var s = growthStats(kid, g);
@@ -3978,33 +4048,37 @@ function growthCardHTML(){
     if (s.h !== null) badges.push('키 ' + fmtPct(s.h));
     if (s.w !== null) badges.push('몸무게 ' + fmtPct(s.w));
     if (s.b !== null) badges.push('BMI ' + fmtPct(s.b));
-    var sub = badges.length ? badges.join(' · ') : '생년월을 넣으면 백분위가 나와요';
-    if (g.memo) sub += ' · ' + esc(g.memo);
+    var sub = badges.length ? badges.join(' · ') : (birth ? '' : '생년월을 넣으면 백분위가 나와요');
+    if (g.memo) sub += (sub ? ' · ' : '') + esc(g.memo);
     return '<div class="gp-row">' +
-      '<div class="gp-date">' + esc(g.date.slice(2, 4)) + '.' + esc(g.date.slice(5, 7)) + '.' + esc(g.date.slice(8, 10)) + '</div>' +
+      '<div class="gp-date">' + shortYmd(g.date) + '</div>' +
       '<div class="gp-main">' +
         '<div class="n">' + (g.height ? g.height + 'cm' : '') +
           (g.height && g.weight ? ' · ' : '') + (g.weight ? g.weight + 'kg' : '') +
           (s.bmi ? ' · BMI ' + s.bmi : '') + '</div>' +
-        '<div class="s">' + sub + '</div>' +
+        (sub ? '<div class="s">' + sub + '</div>' : '') +
       '</div>' +
-      '<button class="iconbtn iconbtn--del" data-act="growth-del" data-id="' + g.id + '" aria-label="기록 삭제">✕</button>' +
+      '<button class="iconbtn iconbtn--del" data-act="growth-del" data-kid="' + kid + '" data-id="' + esc(g.id) + '" aria-label="' + esc(p.name) + ' 기록 삭제">✕</button>' +
     '</div>';
-  }).join('') : '<div class="empty">아직 키·몸무게 기록이 없어요. [+ 기록 추가]로 첫 기록을 남겨 보세요.</div>';
+  }).join('') : '<div class="gp-empty">아직 ' + esc(p.name) + ' 기록이 없어요.<br>위 버튼으로 키·몸무게를 남겨 보세요.</div>';
 
-  return '<div class="card card--mint">' +
+  return '<div class="gp-kid gp-kid--' + kid + '">' + head + addBtn + chart + rows + '</div>';
+}
+function growthCardHTML(){
+  return '<div class="card card--mint gp-section">' +
     '<div class="card-hd">' +
       '<div class="card-title">📏 성장 기록</div>' +
-      '<button class="btn btn--sm btn--mint" data-act="growth-add">＋ 기록 추가</button>' +
+      '<div class="mini-pill mini-pill--mint">태주 · 주원</div>' +
     '</div>' +
-    '<div class="card-desc" style="margin:0 0 8px">키·몸무게를 적으면 BMI와 또래 백분위를 자동으로 계산해요 (질병관리청 2017 성장도표·남아 기준).</div>' +
-    kidSwitchHTML() +
-    birthRow + sum + chart + rows +
-    '<div class="tiny" style="margin-top:8px;line-height:1.5">백분위는 같은 나이 또래와 견줘 본 참고 지표예요. 3% 미만·97% 이상이거나 갑자기 순위가 많이 바뀌면 소아청소년과에서 상담해 보세요.</div>' +
+    '<div class="card-desc" style="margin:0 0 10px">두 아이 기록을 따로 모아 한 화면에서 봐요. 키·몸무게를 적으면 BMI와 또래 백분위를 자동으로 계산해요 (질병관리청 2017 성장도표·남아 기준).</div>' +
+    growthCompareHTML() +
+    '<div class="gp-pair">' + KIDS.map(growthKidHTML).join('') + '</div>' +
+    '<div class="tiny" style="margin-top:9px;line-height:1.5">백분위는 같은 나이 또래와 견줘 본 참고 지표예요. 3% 미만·97% 이상이거나 갑자기 순위가 많이 바뀌면 소아청소년과에서 상담해 보세요.</div>' +
   '</div>';
 }
-function openGrowthAdd(){
-  var kid = state.ui.kid, p = person(kid);
+function openGrowthAdd(kid){
+  if (KIDS.indexOf(kid) < 0) kid = state.ui.kid;
+  var p = person(kid);
   openModal(
     '<div class="sheet-hd"><div class="sheet-title">📏 ' + esc(p.name) + ' 성장 기록</div>' +
     '<button class="sheet-close" data-act="modal-close" aria-label="닫기">✕</button></div>' +
@@ -4039,11 +4113,13 @@ function saveGrowth(kid){
   save(); render();
   toast('성장 기록을 저장했어요');
 }
-function deleteGrowth(id){
-  var kid = state.ui.kid;
+function deleteGrowth(kid, id){
+  if (KIDS.indexOf(kid) < 0) return;
+  var before = (state.growth[kid] || []).length;
   state.growth[kid] = (state.growth[kid] || []).filter(function(g){ return g.id !== id; });
+  if ((state.growth[kid] || []).length === before) return;
   save(); render();
-  toast('기록을 지웠어요');
+  toast(person(kid).name + ' 기록을 지웠어요');
 }
 function saveBirth(kid){
   var el = document.getElementById('birthInput');
@@ -4059,7 +4135,7 @@ function editBirth(kid){
     '<div class="sheet-hd"><div class="sheet-title">🎂 ' + esc(person(kid).name) + ' 생년월</div>' +
     '<button class="sheet-close" data-act="modal-close" aria-label="닫기">✕</button></div>' +
     '<div class="card-desc">성장 백분위를 계산하려면 생년월이 필요해요. 태어난 달만 알면 돼요.</div>' +
-    '<input class="field" type="month" id="birthInput" value="' + esc(state.births[kid] || '') + '">' +
+    '<input class="field" type="month" id="birthInput" value="' + esc(String(state.births[kid] || '').slice(0, 7)) + '">' +
     '<div class="sheet-actions">' +
       '<button class="btn btn--ghost" data-act="modal-close">취소</button>' +
       '<button class="btn btn--mint" data-act="birth-save" data-id="' + kid + '">저장</button>' +
