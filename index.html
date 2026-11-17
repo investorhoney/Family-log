@@ -461,6 +461,7 @@ select.field{padding:10px 8px;height:44px;background:#fff}
 .val-accs{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:10px;align-items:center}
 .val-acc{border:1.5px solid #F3D2DE;background:#fff;border-radius:999px;padding:6px 11px;font-size:12px;font-weight:800;color:#B85A76;cursor:pointer;white-space:nowrap}
 .val-acc.on{background:#FFE9F1;border-color:#F0A9C0;color:#A24663}
+.val-other{display:flex;gap:5px;flex-wrap:wrap;align-items:center;justify-content:center;margin-top:8px;font-size:10.5px;color:#B08A9A;font-weight:800}
 .val-accrow{display:flex;align-items:center;gap:7px;width:100%;background:#fff;border:1.5px solid #F3E4EA;border-radius:14px;padding:8px 10px;margin-bottom:7px;cursor:pointer;text-align:left}
 .val-accrow:last-child{margin-bottom:0}
 .val-accrow.on{border-color:#F0A9C0;background:#FFF7FA;box-shadow:var(--shadow-sm)}
@@ -4279,6 +4280,12 @@ function renderPlay(){
   }).join('');
 
   var curSkins = acc ? valSkins(acc.id) : [];
+  var otherAccs = accs.filter(function(a){ return (!acc || a.id !== acc.id) && valSkinCount(a.id) > 0; });
+  var otherHint = otherAccs.length
+    ? '<div class="val-other">다른 계정 보관함 ' + otherAccs.map(function(a){
+        return '<button class="val-acc" style="font-size:11px;padding:4px 9px" data-act="val-acc" data-id="' + a.id + '">' + esc(a.label || a.name) + ' ' + valSkinCount(a.id) + '개</button>';
+      }).join(' ') + '</div>'
+    : '';
   var skinGrid = curSkins.length
     ? '<div class="val-skin-grid">' + curSkins.map(function(k){
         return '<div class="val-skin">' +
@@ -4326,6 +4333,7 @@ function renderPlay(){
         '<div class="mini-pill mini-pill--pink">' + (acc ? esc(acc.label || acc.name) + ' · ' + curSkins.length + '개' : '0개') + '</div>' +
       '</div>' +
       skinGrid +
+      otherHint +
       '<div class="foot-note" style="padding:8px 0 0">스킨 이미지는 라이엇 공식 에셋 API에서 불러와요 · 계정마다 따로 보관되고 가족 모두에게 보여요</div>' +
     '</div>';
 }
