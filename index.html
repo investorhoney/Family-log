@@ -5439,6 +5439,11 @@ function fbOnRemote(val){
     next.valorant = { accounts: next.valorant.accounts, cur: next.valorant.cur, tiers: next.valorant.tiers, skins: mergedSkins, album: next.valorant.album };
     needPush = true;
   }
+  /* 예전 화면(사진첩 없는 버전)이 올린 값에도 사진첩 기록을 지우지 않아요 */
+  if (isObj(val.valorant) && !Array.isArray(val.valorant.album) && arrOf(state.valorant.album).length){
+    next.valorant.album = arrOf(state.valorant.album);
+    needPush = true;
+  }
   var freshDefaults = null;
   NEW_SHARED_KEYS.forEach(function(k){
     if (val[k] !== undefined) return;
