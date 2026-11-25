@@ -567,6 +567,29 @@ select.field{padding:10px 8px;height:44px;background:#fff}
 .wx-mm .lo{color:#9DB0C2}
 .wx-rain{font-size:8.5px;font-weight:800;color:#5A8FB8;line-height:1.2;white-space:nowrap}
 
+/* ---------- 🗣️ 아빠 스픽(Speak) ---------- */
+.sk-hero{display:flex;align-items:flex-end;gap:6px;margin:6px 0 8px}
+.sk-big{font-size:36px;font-weight:900;letter-spacing:-1.4px;color:#C2697F;line-height:.95;font-variant-numeric:tabular-nums}
+.sk-of{font-size:13.5px;font-weight:800;color:#A08A85;padding-bottom:3px}
+.sk-pct{margin-left:auto;font-size:12px;font-weight:900;color:#B85A76;background:#FFF1F5;border-radius:999px;padding:5px 10px;box-shadow:var(--shadow-sm)}
+.sk-pct.done{color:#2F7A57;background:#E9F9F0}
+.sk-bar{height:13px;border-radius:999px;background:#F6E9EA;overflow:hidden}
+.sk-bar > i{display:block;height:100%;border-radius:999px;background:linear-gradient(90deg,#FFC2D3,#F58CA8);transition:width .35s ease}
+.sk-bar > i.done{background:linear-gradient(90deg,#A9E3C4,#5CBD84)}
+.sk-quick{display:flex;gap:6px;margin-top:10px}
+.sk-quick .btn{flex:1 1 0;min-width:0;padding:9px 4px}
+.sk-week{display:flex;gap:4px;margin-top:12px}
+.sk-day{flex:1 1 0;min-width:0;text-align:center}
+.sk-b{height:42px;display:flex;align-items:flex-end;justify-content:center;background:#FCF3EC;border-radius:9px;overflow:hidden}
+.sk-b > i{display:block;width:100%;background:linear-gradient(180deg,#FFD3E0,#F5A0B9);border-radius:9px}
+.sk-day.done .sk-b > i{background:linear-gradient(180deg,#B6E8CD,#68C29A)}
+.sk-day.today .sk-b{box-shadow:inset 0 0 0 2px #F3C73F}
+.sk-dow{font-size:9.5px;font-weight:900;color:#B5A18C;margin-top:3px;line-height:1.2}
+.sk-val{font-size:9.5px;font-weight:800;color:#8B7460;line-height:1.3;font-variant-numeric:tabular-nums}
+.sk-day.done .sk-val{color:#3E8A66}
+.sk-cum{margin-top:11px;font-size:12.5px;font-weight:700;color:#6E5A52;background:#FFF8F2;border-radius:12px;padding:8px 10px;line-height:1.5}
+.sk-cum b{color:#C2697F;font-weight:900;font-variant-numeric:tabular-nums}
+
 @keyframes fade{from{opacity:0}to{opacity:1}}
 @keyframes up{from{transform:translateY(24px);opacity:.6}to{transform:translateY(0);opacity:1}}
 @media (prefers-reduced-motion: reduce){*{animation:none!important;transition:none!important}}
@@ -1064,6 +1087,15 @@ function defaultState(){
       /* 📸 추억 사진첩: 사진(자동 압축)·영상 링크·메모를 모아 둬요 */
       album: []
     },
+    /* 🗣️ 아빠 스픽(Speak): 하루 50문장 목표 + 날짜별 기록 */
+    speak: {
+      goal: 50,
+      /* 2026-11-25 스픽 앱 프로필에 보이던 누적값 (이 아래에 기록장에 더한 날들을 합쳐요) */
+      baseSentences: 23360,
+      baseMinutes: 5577,
+      baseDate: '2026-11-25',
+      days: {}
+    },
     ui: { tab:'home', kid:'taeju', growthMetric:'h', gm:{ taeju:'h', juwon:'h' }, lunchView:'today', albumFilter:'all', albumBy:'', albumKind:'family', albumWho:'' }
   };
 }
@@ -1381,6 +1413,27 @@ function normalize(raw){
     s.valorant.skins = skinMap;
     /* 📸 추억 사진첩: 배열이면 사진·영상 링크를 안전하게 다듬어 담아요 */
     if (Array.isArray(va.album)) s.valorant.album = albReadList(va.album);
+  }
+
+  /* 🗣️ 아빠 스픽: 목표 문장 수·앱 기준 누적값·날짜별 기록 */
+  if (isObj(raw.speak)){
+    var sp = raw.speak;
+    var spGoal = Math.round(numOf(sp.goal, 50));
+    s.speak.goal = (spGoal >= 1 && spGoal <= 500) ? spGoal : 50;
+    s.speak.baseSentences = Math.max(0, Math.min(9999999, Math.round(numOf(sp.baseSentences, 23360))));
+    s.speak.baseMinutes = Math.max(0, Math.min(9999999, Math.round(numOf(sp.baseMinutes, 5577))));
+    s.speak.baseDate = isValidYmd(sp.baseDate) ? sp.baseDate : '2026-11-25';
+    var spDays = {};
+    if (isObj(sp.days)){
+      Object.keys(sp.days).forEach(function(dk){
+        if (!isValidYmd(dk) || !isObj(sp.days[dk])) return;
+        var sd = sp.days[dk];
+        var sen = Math.max(0, Math.min(5000, Math.round(numOf(sd.s, 0))));
+        var min = Math.max(0, Math.min(1440, Math.round(numOf(sd.m, 0))));
+        if (sen || min) spDays[dk] = { s: sen, m: min };
+      });
+    }
+    s.speak.days = spDays;
   }
 
   if (isObj(raw.ui)){
@@ -1989,6 +2042,8 @@ function renderHome(){
       goalBlockHTML(kid) +
     '</div>' +
 
+    speakMiniHTML() +
+
     '<div class="card card--peach">' +
       '<div class="card-hd">' +
         '<div class="card-title">🎲 오늘의 가족 미션</div>' +
@@ -2161,6 +2216,7 @@ function renderRoutine(){
       rows +
     '</div>' +
 
+    speakCardHTML() +
     timerCardHTML() +
     '<div class="foot-note">공부를 하나라도 마치면 오늘의 도장이 찍혀요(도장은 그대로 남아요). 체크를 풀면 적립금은 취소돼요.</div>';
 }
@@ -3315,6 +3371,210 @@ function deleteGiftHist(id, personId){
   );
 }
 
+/* ============================ 🗣️ 아빠 스픽(Speak) ============================ */
+/* 앱 프로필(2026-11-25) 기준값: 말한 문장 23,360개 · 공부한 시간 5,577분 */
+var SPEAK_BASE_DATE = '2026-11-25';
+var SPEAK_BASE_SENTENCES = 23360;
+var SPEAK_BASE_MINUTES = 5577;
+var SPEAK_DAY_MAX = 2000;   /* 하루 기록 상한 (오타 방지) */
+var SPEAK_MIN_MAX = 1440;
+
+function speakGoal(){
+  var g = Math.round(numOf(state.speak && state.speak.goal, 50));
+  return (g >= 1 && g <= 500) ? g : 50;
+}
+function speakBase(){
+  var sp = state.speak || {};
+  return {
+    sentences: Math.max(0, Math.round(numOf(sp.baseSentences, SPEAK_BASE_SENTENCES))),
+    minutes: Math.max(0, Math.round(numOf(sp.baseMinutes, SPEAK_BASE_MINUTES)))
+  };
+}
+function speakDay(date){
+  var days = (state.speak && state.speak.days) || {};
+  var d = days[date || today()];
+  if (!isObj(d)) return { s:0, m:0 };
+  return { s: Math.max(0, Math.round(numOf(d.s, 0))), m: Math.max(0, Math.round(numOf(d.m, 0))) };
+}
+function speakSumExcept(date){
+  var out = { s:0, m:0 };
+  var days = (state.speak && state.speak.days) || {};
+  Object.keys(days).forEach(function(k){
+    if (k === date) return;
+    var d = days[k];
+    if (!isObj(d)) return;
+    out.s += Math.max(0, Math.round(numOf(d.s, 0)));
+    out.m += Math.max(0, Math.round(numOf(d.m, 0)));
+  });
+  return out;
+}
+function speakTotal(){
+  var base = speakBase(), sum = speakSumExcept('');
+  return { sentences: base.sentences + sum.s, minutes: base.minutes + sum.m };
+}
+function speakPctOf(n){
+  var goal = speakGoal();
+  return goal ? Math.min(100, Math.round(n / goal * 100)) : 0;
+}
+function speakWeekHTML(){
+  var goal = speakGoal(), week = weekDates(), tKey = today();
+  var cells = week.map(function(d){
+    var key = ymd(d);
+    var val = speakDay(key).s;
+    if (key > tKey) val = 0;              /* 아직 오지 않은 날은 비워요 */
+    var pct = speakPctOf(val);
+    var h = val <= 0 ? 0 : Math.max(7, pct);
+    var done = val >= goal;
+    return '<div class="sk-day' + (done ? ' done' : '') + (key === tKey ? ' today' : '') + '">' +
+      '<div class="sk-b"><i style="height:' + h + '%"></i></div>' +
+      '<div class="sk-dow">' + WEEK_KO[d.getDay()] + '</div>' +
+      '<div class="sk-val">' + (val > 0 ? val : '·') + '</div>' +
+    '</div>';
+  }).join('');
+  return '<div class="sk-week">' + cells + '</div>';
+}
+function speakQuickHTML(){
+  return '<div class="sk-quick">' +
+    '<button class="btn btn--sm btn--rose" data-act="speak-add" data-id="10">+10</button>' +
+    '<button class="btn btn--sm btn--rose" data-act="speak-add" data-id="25">+25</button>' +
+    '<button class="btn btn--sm btn--rose" data-act="speak-add" data-id="50">+50</button>' +
+    '<button class="btn btn--sm btn--ghost" data-act="speak-add" data-id="-10" aria-label="10문장 되돌리기" title="10문장 되돌리기">↩︎</button>' +
+  '</div>';
+}
+/* 루틴 탭: 오늘 목표·빠른 입력·직접 입력·이번 주 그래프 */
+function speakCardHTML(){
+  var goal = speakGoal(), d = speakDay(), tot = speakTotal();
+  var pct = speakPctOf(d.s), done = d.s >= goal, left = Math.max(0, goal - d.s);
+  return '<div class="card card--pink">' +
+    '<div class="card-hd">' +
+      '<div class="card-title">🗣️ 아빠 스픽(Speak)</div>' +
+      (done
+        ? '<div class="mini-pill mini-pill--mint">✅ 오늘 달성!</div>'
+        : '<div class="mini-pill mini-pill--pink">하루 ' + goal + '문장 목표</div>') +
+    '</div>' +
+    '<div class="card-desc">' + (done
+      ? '오늘 목표를 넘겼어요. 아빠 최고! 👏'
+      : '오늘 ' + left + '문장만 더 말하면 목표 달성이에요') + '</div>' +
+    '<div class="sk-hero">' +
+      '<span class="sk-big">' + d.s + '</span>' +
+      '<span class="sk-of">/ ' + goal + '문장</span>' +
+      '<span class="sk-pct' + (done ? ' done' : '') + '">' + (done ? '🎉 ' : '') + pct + '%</span>' +
+    '</div>' +
+    '<div class="sk-bar"><i class="' + (done ? 'done' : '') + '" style="width:' + pct + '%"></i></div>' +
+    speakQuickHTML() +
+    '<div class="form-row" style="margin:10px 0 0">' +
+      '<label for="speakTodayInput">오늘</label>' +
+      '<input class="field field--sm grow" id="speakTodayInput" inputmode="numeric" maxlength="4" data-enter="speak-today" placeholder="말한 문장" value="' + (d.s ? d.s : '') + '">' +
+      '<input class="field field--sm" id="speakTodayMin" inputmode="numeric" maxlength="4" placeholder="분" aria-label="오늘 공부한 시간(분)" style="flex:0 0 72px" value="' + (d.m ? d.m : '') + '">' +
+      '<button class="btn btn--sm btn--mint" data-act="speak-save">저장</button>' +
+    '</div>' +
+    '<div class="sk-cum">누적 <b>' + comma(tot.sentences) + '</b>문장 · <b>' + comma(tot.minutes) + '</b>분' +
+      (d.m ? '<span class="tiny" style="display:block;margin-top:2px">오늘 ' + d.m + '분 공부</span>' : '') +
+    '</div>' +
+    '<div class="tiny" style="margin:8px 0 0">이번 주 · 막대는 목표 ' + goal + '문장 기준</div>' +
+    speakWeekHTML() +
+    '<div class="row" style="gap:6px;margin-top:10px">' +
+      '<button class="btn btn--sm btn--ghost grow" data-act="speak-app-open">📱 스픽 앱 누적값으로 맞추기</button>' +
+    '</div>' +
+    '<div class="tiny" style="margin-top:7px">스픽 앱 기준(' + SPEAK_BASE_DATE + ') ' + comma(speakBase().sentences) + '문장 · ' + comma(speakBase().minutes) + '분에 기록장에 더한 날들을 합친 숫자예요</div>' +
+  '</div>';
+}
+/* 홈: 한눈에 보는 요약 카드 */
+function speakMiniHTML(){
+  var goal = speakGoal(), d = speakDay(), tot = speakTotal();
+  var pct = speakPctOf(d.s), done = d.s >= goal;
+  return '<div class="card card--pink">' +
+    '<div class="card-hd">' +
+      '<div class="card-title">🗣️ 아빠 스픽(Speak)</div>' +
+      '<div class="mini-pill ' + (done ? 'mini-pill--mint' : 'mini-pill--pink') + '">' +
+        (done ? '✅ ' + d.s + '/' + goal + ' 달성' : d.s + '/' + goal + '문장 · ' + pct + '%') +
+      '</div>' +
+    '</div>' +
+    '<div class="sk-bar" style="margin:8px 0 0"><i class="' + (done ? 'done' : '') + '" style="width:' + pct + '%"></i></div>' +
+    speakQuickHTML() +
+    '<div class="row" style="justify-content:space-between;margin-top:9px;gap:6px">' +
+      '<div class="tiny">누적 ' + comma(tot.sentences) + '문장 · ' + comma(tot.minutes) + '분</div>' +
+      '<button class="btn btn--sm btn--ghost" data-act="speak-more">자세히 ›</button>' +
+    '</div>' +
+  '</div>';
+}
+
+function readIntField(el){
+  if (!el) return null;
+  var raw = String(el.value || '').replace(/[^0-9]/g, '');
+  if (!raw) return null;
+  var n = parseInt(raw, 10);
+  return isFinite(n) ? n : null;
+}
+function speakAddToday(n){
+  n = Math.round(numOf(n, 0));
+  if (!n) return;
+  var key = today(), cur = speakDay(key), goal = speakGoal();
+  var next = Math.max(0, Math.min(SPEAK_DAY_MAX, cur.s + n));
+  state.speak.days[key] = { s: next, m: cur.m };
+  save(); render();
+  if (n > 0 && cur.s < goal && next >= goal) toast('🎉 오늘 ' + goal + '문장 달성! 아빠 최고!');
+  else if (n < 0) toast('오늘 ' + next + '문장으로 되돌렸어요');
+  else toast('오늘 ' + next + '문장 · ' + speakPctOf(next) + '%');
+}
+function speakSetTodayFromInputs(showToast){
+  var se = document.getElementById('speakTodayInput');
+  var me = document.getElementById('speakTodayMin');
+  var cur = speakDay(), goal = speakGoal();
+  var s = readIntField(se), m = readIntField(me);
+  if (s === null && m === null){ toast('오늘 말한 문장 수를 숫자로 적어 주세요'); return false; }
+  var nextS = s === null ? cur.s : Math.max(0, Math.min(SPEAK_DAY_MAX, s));
+  var nextM = m === null ? cur.m : Math.max(0, Math.min(SPEAK_MIN_MAX, m));
+  state.speak.days[today()] = { s: nextS, m: nextM };
+  save(); render();
+  if (showToast){
+    if (nextS >= goal) toast('🎉 오늘 ' + nextS + '문장 · 목표 달성!');
+    else toast('오늘 ' + nextS + '문장으로 저장했어요');
+  }
+  return true;
+}
+function openSpeakAppModal(){
+  var tot = speakTotal();
+  openModal(
+    '<div class="sheet-hd"><div class="sheet-title">📱 스픽 앱 누적값 맞추기</div>' +
+    '<button class="sheet-close" data-act="modal-close" aria-label="닫기">✕</button></div>' +
+    '<div class="card-desc">스픽 앱 프로필에 보이는 누적 숫자를 그대로 적으면 오늘 말한 문장·시간을 자동으로 계산해 채워요.</div>' +
+    '<div class="form-row"><label>문장</label><input class="field grow" id="speakTotalSentences" inputmode="numeric" maxlength="7" value="' + comma(tot.sentences) + '" placeholder="예: 23,410"></div>' +
+    '<div class="form-row"><label>분</label><input class="field grow" id="speakTotalMinutes" inputmode="numeric" maxlength="6" value="' + comma(tot.minutes) + '" placeholder="예: 5,589"></div>' +
+    '<div class="tiny" style="margin:2px 0 4px">지금 기록장 누적: ' + comma(tot.sentences) + '문장 · ' + comma(tot.minutes) + '분</div>' +
+    '<div class="sheet-actions">' +
+      '<button class="btn btn--ghost" data-act="modal-close">취소</button>' +
+      '<button class="btn btn--mint" data-act="speak-app-save">맞추기</button>' +
+    '</div>',
+    function(root){ var inp = root.querySelector('#speakTotalSentences'); if (inp) inp.focus(); }
+  );
+}
+function saveSpeakApp(){
+  var T = readIntField(document.getElementById('speakTotalSentences'));
+  var M = readIntField(document.getElementById('speakTotalMinutes'));
+  if (T === null){ toast('앱에 보이는 누적 문장 수를 적어 주세요'); return; }
+  var key = today(), cur = speakDay();
+  var other = speakSumExcept(key);
+  var base = speakBase();
+  var adjusted = false;
+  var todayS = T - base.sentences - other.s;
+  if (todayS < 0){ base.sentences = Math.max(0, base.sentences + todayS); todayS = 0; adjusted = true; }
+  todayS = Math.min(SPEAK_DAY_MAX, Math.round(todayS));
+  var todayM = cur.m;
+  if (M !== null){
+    todayM = M - base.minutes - other.m;
+    if (todayM < 0){ base.minutes = Math.max(0, base.minutes + todayM); todayM = 0; adjusted = true; }
+    todayM = Math.min(SPEAK_MIN_MAX, Math.round(todayM));
+  }
+  state.speak.baseSentences = base.sentences;
+  state.speak.baseMinutes = base.minutes;
+  state.speak.days[key] = { s: todayS, m: todayM };
+  save(); closeModal(); render();
+  var goal = speakGoal();
+  toast('앱 값에 맞췄어요 · 오늘 ' + todayS + '문장' + (todayS >= goal ? ' 🎉 달성!' : ''));
+  if (adjusted) setTimeout(function(){ toast('앱 누적값에 맞춰 기준점을 조정했어요'); }, 2300);
+}
+
 var ACTIONS = {
   'tab': function(el){
     if (!el.dataset.id) return;
@@ -3440,6 +3700,12 @@ var ACTIONS = {
 
   'health-toggle': function(el){ toggleHealth(el.dataset.person, el.dataset.id); },
 
+  'speak-add': function(el){ speakAddToday(Number(el.dataset.id)); },
+  'speak-save': function(){ speakSetTodayFromInputs(true); },
+  'speak-more': function(){ state.ui.tab = 'routine'; save(); render(); scrollTop(); },
+  'speak-app-open': openSpeakAppModal,
+  'speak-app-save': saveSpeakApp,
+
   'praise-send': function(){ sendPraise(); },
   'praise-del': function(el){ deletePraise(el.dataset.id); },
 
@@ -3510,6 +3776,7 @@ document.addEventListener('keydown', function(e){
   if (ent === 'val-skin-search'){ doSkinSearch(); return; }
   if (ent === 'chat-send'){ if (sendChat()) render(); return; }
   if (ent === 'wish-save'){ saveWish(el.getAttribute('data-person')); return; }
+  if (ent === 'speak-today'){ speakSetTodayFromInputs(true); return; }
 });
 
 /* ============================ 애들 학원 숙제 ============================ */
@@ -5169,9 +5436,9 @@ var FB_CONFIG = {
    기기별 설정(state.chat.sender, state.chat.locked, state.ui)은 여기에 없어서
    엄마 폰에서 '엄마'로 잠가도 아빠 폰 발신자는 그대로예요. */
 var SHARED_KEYS = ['family','study','done','stamps','todos','mission','meals','events','health','praise','allowance','wishGifts','stampGoal','giftHistory',
-  'homework','schools','growth','births','valorant'];
+  'homework','schools','growth','births','valorant','speak'];
 /* 이번 버전에서 새로 더한 필드 — 예전 화면이 올린 값에 이 키들이 없으면 이 기기 내용을 지키고 다시 올려요 */
-var NEW_SHARED_KEYS = ['homework','schools','growth','births','valorant'];
+var NEW_SHARED_KEYS = ['homework','schools','growth','births','valorant','speak'];
 var DEVICE_ID = 'd' + Math.random().toString(36).slice(2, 8) + Date.now().toString(36).slice(-3);
 var JOINED_KEY = 'uri-family-record:joined';
 /* 처음 만든 기본 항목들은 합치지 않아요(가족이 지운 기본 항목이 되살아나지 않도록) */
@@ -5271,6 +5538,18 @@ function mergeLocalInto(next){
   /* 사진첩: 이 기기에만 있던 추억 기록도 잃지 않도록 합쳐요 */
   if (isObj(next.valorant) && arrOf(state.valorant.album).length){
     next.valorant.album = mergeById(next.valorant.album, state.valorant.album).sort(function(a, b){ return numOf(b.at, 0) - numOf(a.at, 0); }).slice(0, ALB_MAX);
+  }
+  /* 🗣️ 아빠 스픽: 이 기기에만 기록된 날짜도 합쳐요 (같은 날은 큰 값) */
+  if (isObj(next.speak) && isObj(state.speak) && isObj(state.speak.days)){
+    if (!isObj(next.speak.days)) next.speak.days = {};
+    Object.keys(state.speak.days).forEach(function(dk){
+      var src = state.speak.days[dk];
+      if (!isValidYmd(dk) || !isObj(src)) return;
+      var dst = next.speak.days[dk];
+      if (!isObj(dst)){ next.speak.days[dk] = { s: Math.round(numOf(src.s, 0)), m: Math.round(numOf(src.m, 0)) }; return; }
+      dst.s = Math.max(numOf(dst.s, 0), Math.round(numOf(src.s, 0)));
+      dst.m = Math.max(numOf(dst.m, 0), Math.round(numOf(src.m, 0)));
+    });
   }
   var d = today();
   if (state.meals[d] && next.meals[d]){
